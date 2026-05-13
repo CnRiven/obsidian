@@ -253,7 +253,7 @@ Activity`的`startActivity`方法。 `startActivity`会调用`mInstrumentation .
 
 连接调用的是 ZygoteState. connect() 方法 ， ZygoteState 是 ZygoteProcess 的内部类。 ZygoteState里用的 LocalSocket
 
-```
+```java
 public static ZygoteState connect(LocalSocketAddress address) throws IOException { DataInputStream zygoteInputStream = null; BufferedWriter zygoteWriter = null; final LocalSocket zygoteSocket = new LocalSocket(); try { zygoteSocket.connect(address); zygoteInputStream = new DataInputStream(zygoteSocket.getInputStream()); zygoteWriter = new BufferedWriter(new OutputStreamWriter( zygoteSocket.getOutputStream()), 256); } catch (IOException ex) { try { zygoteSocket.close(); } catch (IOException ignore) { } throw ex; } return new ZygoteState(zygoteSocket, zygoteInputStream, zygoteWriter, Arrays.asList(abiListString.split(","))); }
 ```
 
