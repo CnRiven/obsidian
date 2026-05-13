@@ -277,7 +277,7 @@ Zygote 处理客户端请求
 
 Zygote 服务端接收到参数之后调用 ZygoteConnection. processOneCommand() 处理参数 ，并 fork 进程 最 后通过 findStaticMain() 找到 ActivityThread 类的 main() 方法并执行 ， 子进程就启动了
 
-### 5. ActivityRecord、TaskRecord、ActivityStack、ActivityStackSupervisor、ProcessRecord
+###  5. ActivityRecord、TaskRecord、ActivityStack、ActivityStackSupervisor、ProcessRecord
 
 ActivityRecord
 
