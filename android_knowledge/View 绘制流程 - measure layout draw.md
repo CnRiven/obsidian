@@ -24,6 +24,35 @@ ViewRootImpl.performTraversals()
 └─────────────────────────────────────┘
 ```
 
+### 1. ViewRootImpl.performTraversals()
+
+```java
+// ViewRootImpl.java
+private void performTraversals() {
+    // 1. 测量
+    performMeasure(childWidthMeasureSpec, childHeightMeasureSpec);
+    
+    // 2. 布局
+    performLayout(lp, mWidth, mHeight);
+    
+    // 3. 绘制
+    performDraw();
+}
+```
+
+### 2. 绘制的触发时机
+
+```java
+// 1. Activity 创建时
+Activity.onCreate() → setContentView() → ViewRootImpl.performTraversals()
+
+// 2. View.invalidate()
+View.invalidate() → ViewRootImpl.scheduleTraversals() → performTraversals()
+
+// 3. View.requestLayout()
+View.requestLayout() → ViewRootImpl.scheduleTraversals() → performTraversals()
+```
+
 ---
 
 ## 二、Measure 流程
@@ -38,8 +67,8 @@ public static class MeasureSpec {
     
     // 三种模式
     public static final int UNSPECIFIED = 0 << MODE_SHIFT; // 不限制
-    public static final int EXACTLY = 1 << MODE_SHIFT;     // 精确值（match_parent 或具体 dp）
-    public static final int AT_MOST = 2 << MODE_SHIFT;     // 最大值（wrap_content）
+    public static final int EXACTLY = 1 << MODE_SHIFT;     // 精确值
+    public static final int AT_MOST = 2 << MODE_SHIFT;     // 最大值
     
     // 创建 MeasureSpec
     public static int makeMeasureSpec(int size, int mode) {
@@ -58,7 +87,85 @@ public static class MeasureSpec {
 }
 ```
 
-### 2. View 的 measure
+### 2. MeasureSpec 与 LayoutParams 的关系
+
+```java
+// ViewGroup.getChildMeasureSpec()
+public static int getChildMeasureSpec(int spec, int padding, int childDimension) {
+    int specMode = MeasureSpec.getMode(spec);
+    int specSize = MeasureSpec.getSize(spec);
+    
+    int size = Math.max(0, specSize - padding);
+    
+    int resultSize = 0;
+    int resultMode = 0;
+    
+    switch (specMode) {
+        // Parent has imposed an exact size on us
+        case MeasureSpec.EXACTLY:
+            if (childDimension >= 0) {
+                // 子 View 指定了具体尺寸
+                resultSize = childDimension;
+                resultMode = MeasureSpec.EXACTLY;
+            } else if (childDimension == LayoutParams.MATCH_PARENT) {
+                // 子 View 想要和 Parent 一样大
+                resultSize = size;
+                resultMode = MeasureSpec.EXACTLY;
+            } else if (childDimension == LayoutParams.WRAP_CONTENT) {
+                // 子 View 想要自己决定大小
+                resultSize = size;
+                resultMode = MeasureSpec.AT_MOST;
+            }
+            break;
+        
+        // Parent has imposed a maximum size on us
+        case MeasureSpec.AT_MOST:
+            if (childDimension >= 0) {
+                resultSize = childDimension;
+                resultMode = MeasureSpec.EXACTLY;
+            } else if (childDimension == LayoutParams.MATCH_PARENT) {
+                resultSize = size;
+                resultMode = MeasureSpec.AT_MOST;
+            } else if (childDimension == LayoutParams.WRAP_CONTENT) {
+                resultSize = size;
+                resultMode = MeasureSpec.AT_MOST;
+            }
+            break;
+        
+        // Parent asked to see how big we want to be
+        case MeasureSpec.UNSPECIFIED:
+            if (childDimension >= 0) {
+                resultSize = childDimension;
+                resultMode = MeasureSpec.EXACTLY;
+            } else if (childDimension == LayoutParams.MATCH_PARENT) {
+                resultSize = 0;
+                resultMode = MeasureSpec.UNSPECIFIED;
+            } else if (childDimension == LayoutParams.WRAP_CONTENT) {
+                resultSize = 0;
+                resultMode = MeasureSpec.UNSPECIFIED;
+            }
+            break;
+    }
+    
+    return MeasureSpec.makeMeasureSpec(resultSize, resultMode);
+}
+```
+
+**关系总结：**
+
+| Parent SpecMode | Child LayoutParams | Child SpecMode |
+|-----------------|-------------------|----------------|
+| EXACTLY | 具体 dp | EXACTLY |
+| EXACTLY | match_parent | EXACTLY |
+| EXACTLY | wrap_content | AT_MOST |
+| AT_MOST | 具体 dp | EXACTLY |
+| AT_MOST | match_parent | AT_MOST |
+| AT_MOST | wrap_content | AT_MOST |
+| UNSPECIFIED | 具体 dp | EXACTLY |
+| UNSPECIFIED | match_parent | UNSPECIFIED |
+| UNSPECIFIED | wrap_content | UNSPECIFIED |
+
+### 3. View 的 measure
 
 ```java
 // View.java
@@ -98,7 +205,7 @@ public static int getDefaultSize(int size, int measureSpec) {
 }
 ```
 
-### 3. ViewGroup 的 measure
+### 4. ViewGroup 的 measure
 
 ```java
 // ViewGroup 没有 onMeasure，由子类实现
@@ -115,6 +222,7 @@ protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 void measureVertical(int widthMeasureSpec, int heightMeasureSpec) {
     int totalHeight = 0;
     int maxWidth = 0;
+    int totalWeight = 0;
     
     // 遍历子 View
     for (int i = 0; i < count; ++i) {
@@ -125,15 +233,29 @@ void measureVertical(int widthMeasureSpec, int heightMeasureSpec) {
         
         totalHeight += child.getMeasuredHeight() + lp.topMargin + lp.bottomMargin;
         maxWidth = Math.max(maxWidth, child.getMeasuredWidth());
+        totalWeight += lp.weight;
     }
     
     // 设置自己的尺寸
     setMeasuredDimension(resolveSize(maxWidth, widthMeasureSpec),
                          resolveSize(totalHeight, heightMeasureSpec));
 }
+
+protected void measureChildWithMargins(View child, int parentWidthMeasureSpec, int widthUsed,
+        int parentHeightMeasureSpec, int heightUsed) {
+    final MarginLayoutParams lp = (MarginLayoutParams) child.getLayoutParams();
+    
+    // 计算子 View 的 MeasureSpec
+    final int childWidthMeasureSpec = getChildMeasureSpec(parentWidthMeasureSpec,
+            mPaddingLeft + mPaddingRight + lp.leftMargin + lp.rightMargin + widthUsed, lp.width);
+    final int childHeightMeasureSpec = getChildMeasureSpec(parentHeightMeasureSpec,
+            mPaddingTop + mPaddingBottom + lp.topMargin + lp.bottomMargin + heightUsed, lp.height);
+    
+    child.measure(childWidthMeasureSpec, childHeightMeasureSpec);
+}
 ```
 
-### 4. 自定义 View 的 measure
+### 5. 自定义 View 的 measure
 
 ```java
 @Override
@@ -151,7 +273,7 @@ protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
     } else {
         width = calculateWidth(); // wrap_content，自己计算
         if (widthMode == MeasureSpec.AT_MOST) {
-            width = Math.min(width, widthSize);
+            width = Math.min(width, widthSize); // 不能超过父容器
         }
     }
     
@@ -179,10 +301,12 @@ protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 // View.java
 public void layout(int l, int t, int r, int b) {
     // 设置位置
-    setFrame(l, t, r, b);
+    boolean changed = setFrame(l, t, r, b);
     
-    // 回调 onLayout
-    onLayout(changed, l, t, r, b);
+    if (changed || (mPrivateFlags & PFLAG_LAYOUT_REQUIRED) == PFLAG_LAYOUT_REQUIRED) {
+        // 回调 onLayout
+        onLayout(changed, l, t, r, b);
+    }
 }
 
 protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
@@ -210,27 +334,88 @@ protected void onLayout(boolean changed, int left, int top, int right, int botto
 }
 
 void layoutChildren(int left, int top, int right, int bottom, boolean forceLeftGravity) {
+    final int count = getChildCount();
+    
+    final int parentLeft = getPaddingLeftWithForeground();
+    final int parentRight = right - left - getPaddingRightWithForeground();
+    final int parentTop = getPaddingTopWithForeground();
+    final int parentBottom = bottom - top - getPaddingBottomWithForeground();
+    
     for (int i = 0; i < count; i++) {
         final View child = getChildAt(i);
-        
-        // 根据 gravity 计算位置
-        int childLeft, childTop;
-        
-        switch (gravity & Gravity.HORIZONTAL_GRAVITY_MASK) {
-            case Gravity.CENTER_HORIZONTAL:
-                childLeft = parentLeft + (parentRight - parentLeft - width) / 2;
-                break;
-            case Gravity.RIGHT:
-                childLeft = parentRight - width;
-                break;
-            default: // LEFT
-                childLeft = parentLeft;
+        if (child.getVisibility() != GONE) {
+            final LayoutParams lp = (LayoutParams) child.getLayoutParams();
+            
+            final int width = child.getMeasuredWidth();
+            final int height = child.getMeasuredHeight();
+            
+            int childLeft;
+            int childTop;
+            
+            int gravity = lp.gravity;
+            if (gravity == -1) {
+                gravity = mForegroundGravity;
+            }
+            
+            final int absoluteGravity = Gravity.getAbsoluteGravity(gravity, layoutDirection);
+            final int verticalGravity = gravity & Gravity.VERTICAL_GRAVITY_MASK;
+            
+            // 计算水平位置
+            switch (absoluteGravity & Gravity.HORIZONTAL_GRAVITY_MASK) {
+                case Gravity.CENTER_HORIZONTAL:
+                    childLeft = parentLeft + (parentRight - parentLeft - width) / 2 +
+                            lp.leftMargin - lp.rightMargin;
+                    break;
+                case Gravity.RIGHT:
+                    if (!forceLeftGravity) {
+                        childLeft = parentRight - width - lp.rightMargin;
+                        break;
+                    }
+                case Gravity.LEFT:
+                default:
+                    childLeft = parentLeft + lp.leftMargin;
+            }
+            
+            // 计算垂直位置
+            switch (verticalGravity) {
+                case Gravity.TOP:
+                    childTop = parentTop + lp.topMargin;
+                    break;
+                case Gravity.CENTER_VERTICAL:
+                    childTop = parentTop + (parentBottom - parentTop - height) / 2 +
+                            lp.topMargin - lp.bottomMargin;
+                    break;
+                case Gravity.BOTTOM:
+                    childTop = parentBottom - height - lp.bottomMargin;
+                    break;
+                default:
+                    childTop = parentTop + lp.topMargin;
+            }
+            
+            // 设置子 View 位置
+            child.layout(childLeft, childTop, childLeft + width, childTop + height);
         }
-        
-        // 设置子 View 位置
-        child.layout(childLeft, childTop, childLeft + width, childTop + height);
     }
 }
+```
+
+### 3. Layout 与 onLayout 的区别
+
+```java
+// layout()：设置 View 的位置（mLeft, mTop, mRight, mBottom）
+// onLayout()：布局子 View（ViewGroup 重写）
+
+// View 的位置：
+mLeft    // 左边界
+mTop     // 上边界
+mRight   // 右边界
+mBottom  // 下边界
+
+// 获取位置：
+view.getLeft()   // mLeft
+view.getTop()    // mTop
+view.getRight()  // mRight
+view.getBottom() // mBottom
 ```
 
 ---
@@ -262,7 +447,16 @@ public void draw(Canvas canvas) {
 }
 ```
 
-### 2. View 的 onDraw
+### 2. 绘制顺序
+
+```
+1. drawBackground(canvas)      // 绘制背景
+2. onDraw(canvas)              // 绘制自身内容
+3. dispatchDraw(canvas)        // 绘制子 View
+4. onDrawForeground(canvas)    // 绘制前景（滚动条等）
+```
+
+### 3. View 的 onDraw
 
 ```java
 // 自定义 View
@@ -273,26 +467,50 @@ protected void onDraw(Canvas canvas) {
     // 绘制内容
     canvas.drawRect(0, 0, getWidth(), getHeight(), mPaint);
     canvas.drawText("Hello", x, y, mTextPaint);
+    canvas.drawCircle(cx, cy, radius, mCirclePaint);
 }
 ```
 
-### 3. ViewGroup 的 dispatchDraw
+### 4. ViewGroup 的 dispatchDraw
 
 ```java
 // ViewGroup.java
 @Override
 protected void dispatchDraw(Canvas canvas) {
+    final int count = mChildrenCount;
+    final View[] children = mChildren;
+    
     for (int i = 0; i < count; i++) {
-        final View child = getChildAt(i);
-        
-        // 绘制子 View
-        drawChild(canvas, child, drawingTime);
+        final View child = children[i];
+        if ((child.mViewFlags & VISIBILITY_MASK) == VISIBLE) {
+            // 绘制子 View
+            drawChild(canvas, child, drawingTime);
+        }
     }
 }
 
 protected boolean drawChild(Canvas canvas, View child, long drawingTime) {
     return child.draw(canvas, this, drawingTime);
 }
+```
+
+### 5. Canvas 和 Paint
+
+```java
+// Canvas：画布，提供绘制方法
+canvas.drawRect(rect, paint);
+canvas.drawCircle(cx, cy, radius, paint);
+canvas.drawText(text, x, y, paint);
+canvas.drawBitmap(bitmap, left, top, paint);
+canvas.drawPath(path, paint);
+
+// Paint：画笔，设置绘制样式
+Paint paint = new Paint();
+paint.setColor(Color.RED);           // 颜色
+paint.setStrokeWidth(2f);            // 线宽
+paint.setStyle(Paint.Style.FILL);    // 填充样式
+paint.setTextSize(16f);              // 文字大小
+paint.setAntiAlias(true);            // 抗锯齿
 ```
 
 ---
@@ -304,6 +522,7 @@ protected boolean drawChild(Canvas canvas, View child, long drawingTime) {
 ```java
 public class CircleView extends View {
     private Paint mPaint;
+    private int mRadius;
     
     public CircleView(Context context) {
         this(context, null);
@@ -311,6 +530,12 @@ public class CircleView extends View {
     
     public CircleView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        
+        // 获取自定义属性
+        TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.CircleView);
+        mRadius = ta.getDimensionPixelSize(R.styleable.CircleView_radius, 100);
+        ta.recycle();
+        
         init();
     }
     
@@ -321,29 +546,42 @@ public class CircleView extends View {
     
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        // 处理 wrap_content
         int widthMode = MeasureSpec.getMode(widthMeasureSpec);
         int widthSize = MeasureSpec.getSize(widthMeasureSpec);
+        int heightMode = MeasureSpec.getMode(heightMeasureSpec);
+        int heightSize = MeasureSpec.getSize(heightMeasureSpec);
         
-        int width;
+        int width, height;
+        
+        // 处理 wrap_content
         if (widthMode == MeasureSpec.EXACTLY) {
             width = widthSize;
         } else {
-            width = 200; // 默认大小
+            width = mRadius * 2 + getPaddingLeft() + getPaddingRight();
             if (widthMode == MeasureSpec.AT_MOST) {
                 width = Math.min(width, widthSize);
             }
         }
         
-        setMeasuredDimension(width, width);
+        if (heightMode == MeasureSpec.EXACTLY) {
+            height = heightSize;
+        } else {
+            height = mRadius * 2 + getPaddingTop() + getPaddingBottom();
+            if (heightMode == MeasureSpec.AT_MOST) {
+                height = Math.min(height, heightSize);
+            }
+        }
+        
+        setMeasuredDimension(width, height);
     }
     
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         
-        int radius = getWidth() / 2;
-        canvas.drawCircle(radius, radius, radius, mPaint);
+        int cx = getWidth() / 2;
+        int cy = getHeight() / 2;
+        canvas.drawCircle(cx, cy, mRadius, mPaint);
     }
 }
 ```
@@ -352,13 +590,39 @@ public class CircleView extends View {
 
 ```java
 public class CustomLayout extends ViewGroup {
+    public CustomLayout(Context context) {
+        super(context);
+    }
+    
+    public CustomLayout(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
+    
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        int widthSize = MeasureSpec.getSize(widthMeasureSpec);
+        int heightSize = MeasureSpec.getSize(heightMeasureSpec);
+        
+        int width = 0;
+        int height = 0;
+        
+        // 测量所有子 View
         measureChildren(widthMeasureSpec, heightMeasureSpec);
         
-        int width = calculateWidth();
-        int height = calculateHeight();
+        // 计算自己的尺寸
+        for (int i = 0; i < getChildCount(); i++) {
+            View child = getChildAt(i);
+            if (child.getVisibility() != GONE) {
+                width += child.getMeasuredWidth();
+                height = Math.max(height, child.getMeasuredHeight());
+            }
+        }
         
+        // 处理 padding
+        width += getPaddingLeft() + getPaddingRight();
+        height += getPaddingTop() + getPaddingBottom();
+        
+        // 设置尺寸
         setMeasuredDimension(
             resolveSize(width, widthMeasureSpec),
             resolveSize(height, heightMeasureSpec)
@@ -367,55 +631,133 @@ public class CustomLayout extends ViewGroup {
     
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        int currentX = 0;
-        int currentY = 0;
+        int currentX = getPaddingLeft();
+        int currentY = getPaddingTop();
         
         for (int i = 0; i < getChildCount(); i++) {
             View child = getChildAt(i);
-            
-            if (currentX + child.getMeasuredWidth() > getWidth()) {
-                currentX = 0;
-                currentY += child.getMeasuredHeight();
+            if (child.getVisibility() != GONE) {
+                int childWidth = child.getMeasuredWidth();
+                int childHeight = child.getMeasuredHeight();
+                
+                // 检查是否需要换行
+                if (currentX + childWidth > getWidth() - getPaddingRight()) {
+                    currentX = getPaddingLeft();
+                    currentY += childHeight;
+                }
+                
+                // 布局子 View
+                child.layout(currentX, currentY, currentX + childWidth, currentY + childHeight);
+                
+                currentX += childWidth;
             }
-            
-            child.layout(
-                currentX,
-                currentY,
-                currentX + child.getMeasuredWidth(),
-                currentY + child.getMeasuredHeight()
-            );
-            
-            currentX += child.getMeasuredWidth();
         }
     }
 }
 ```
 
+### 3. 自定义属性
+
+```xml
+<!-- res/values/attrs.xml -->
+<declare-styleable name="CircleView">
+    <attr name="radius" format="dimension" />
+    <attr name="circleColor" format="color" />
+</declare-styleable>
+```
+
+```java
+// 获取自定义属性
+TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.CircleView);
+int radius = ta.getDimensionPixelSize(R.styleable.CircleView_radius, 100);
+int color = ta.getColor(R.styleable.CircleView_circleColor, Color.RED);
+ta.recycle();
+```
+
 ---
 
-## 六、面试高频问题
+## 六、invalidate 和 requestLayout
 
-### Q1: View 的绘制流程？
-- measure → 确定尺寸
-- layout → 确定位置
-- draw → 绘制内容
+### 1. invalidate()
 
-### Q2: invalidate 和 requestLayout 的区别？
-| 方法 | 作用 | 触发 |
-|------|------|------|
-| invalidate() | 重绘 | 只调用 draw |
-| requestLayout() | 重新布局 | 调用 measure + layout + draw |
+```java
+// View.java
+public void invalidate() {
+    invalidate(true);
+}
 
-### Q3: wrap_content 不生效的原因？
+void invalidate(boolean invalidateCache) {
+    if (invalidateCache) {
+        mPrivateFlags |= PFLAG_INVALIDATED;
+        mPrivateFlags &= ~PFLAG_DRAWING_CACHE_VALID;
+    }
+    
+    // 通知父 View 重绘
+    final ViewParent p = mParent;
+    if (p != null) {
+        p.invalidateChild(this, null);
+    }
+}
+
+// 最终调用 ViewRootImpl.scheduleTraversals()
+// 只会触发 draw，不会触发 measure 和 layout
+```
+
+### 2. requestLayout()
+
+```java
+// View.java
+public void requestLayout() {
+    mPrivateFlags |= PFLAG_FORCE_LAYOUT;
+    
+    // 通知父 View 重新布局
+    final ViewParent p = mParent;
+    if (p != null) {
+        p.requestLayout();
+    }
+}
+
+// 最终调用 ViewRootImpl.scheduleTraversals()
+// 会触发 measure、layout 和 draw
+```
+
+### 3. 区别
+
+| 方法 | 触发 | 使用场景 |
+|------|------|----------|
+| invalidate() | 只触发 draw | 外观变化（颜色、透明度等） |
+| requestLayout() | 触发 measure + layout + draw | 尺寸或位置变化 |
+
+---
+
+## 七、常见问题
+
+### Q1: wrap_content 不生效的原因？
 - 默认情况下，View 的 onMeasure 对 wrap_content 和 match_parent 处理一样
 - 解决：在 onMeasure 中处理 AT_MOST 模式
 
-### Q4: View.post 和 Handler.post 的区别？
-- View.post：如果 View 已经 attach 到 Window，直接发到 Handler
-- 如果还没 attach，会保存到 RunQueue，等 attach 后执行
-- Handler.post：直接发到 MessageQueue
+```java
+@Override
+protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+    int widthMode = MeasureSpec.getMode(widthMeasureSpec);
+    int widthSize = MeasureSpec.getSize(widthMeasureSpec);
+    
+    int width;
+    if (widthMode == MeasureSpec.EXACTLY) {
+        width = widthSize;
+    } else {
+        width = defaultWidth; // 设置默认值
+        if (widthMode == MeasureSpec.AT_MOST) {
+            width = Math.min(width, widthSize);
+        }
+    }
+    
+    setMeasuredDimension(width, height);
+}
+```
 
-### Q5: 如何获取 View 的宽高？
+### Q2: 如何获取 View 的宽高？
+
 ```java
 // 方法一：addOnGlobalLayoutListener
 view.getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
@@ -432,14 +774,112 @@ view.post(() -> {
     int width = view.getWidth();
     int height = view.getHeight();
 });
+
+// 方法三：addOnLayoutChangeListener
+view.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
+    int width = v.getWidth();
+    int height = v.getHeight();
+});
 ```
+
+### Q3: View.post 和 Handler.post 的区别？
+- View.post：如果 View 已经 attach 到 Window，直接发到 Handler
+- 如果还没 attach，会保存到 RunQueue，等 attach 后执行
+- Handler.post：直接发到 MessageQueue
+
+### Q4: getWidth() 和 getMeasuredWidth() 的区别？
+- getWidth()：layout 后的宽度（mRight - mLeft）
+- getMeasuredWidth()：measure 后的宽度（mMeasuredWidth）
+- 通常相等，但在某些情况下可能不同
 
 ---
 
-## 七、最佳实践
+## 八、最佳实践
 
-1. **避免在 onDraw 中创建对象**：Paint、Path 等在构造函数中创建
-2. **处理 padding 和 margin**：自定义 View 要考虑 padding，ViewGroup 要考虑 margin
-3. **处理 wrap_content**：自定义 View 必须处理 AT_MOST 模式
-4. **支持自定义属性**：通过 TypedArray 获取自定义属性
-5. **处理触摸事件**：如果需要交互，重写 onTouchEvent
+### 1. 避免在 onDraw 中创建对象
+```java
+// 错误示例
+@Override
+protected void onDraw(Canvas canvas) {
+    Paint paint = new Paint(); // 每次绘制都创建
+    canvas.drawRect(0, 0, getWidth(), getHeight(), paint);
+}
+
+// 正确示例
+private Paint mPaint = new Paint(); // 构造函数中创建
+
+@Override
+protected void onDraw(Canvas canvas) {
+    canvas.drawRect(0, 0, getWidth(), getHeight(), mPaint);
+}
+```
+
+### 2. 处理 padding 和 margin
+```java
+// 自定义 View 要考虑 padding
+@Override
+protected void onDraw(Canvas canvas) {
+    int left = getPaddingLeft();
+    int top = getPaddingTop();
+    int right = getWidth() - getPaddingRight();
+    int bottom = getHeight() - getPaddingBottom();
+    
+    canvas.drawRect(left, top, right, bottom, mPaint);
+}
+
+// ViewGroup 要考虑 margin
+MarginLayoutParams lp = (MarginLayoutParams) child.getLayoutParams();
+int left = childLeft + lp.leftMargin;
+int top = childTop + lp.topMargin;
+```
+
+### 3. 处理 wrap_content
+```java
+@Override
+protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+    int widthMode = MeasureSpec.getMode(widthMeasureSpec);
+    int widthSize = MeasureSpec.getSize(widthMeasureSpec);
+    
+    int width;
+    if (widthMode == MeasureSpec.EXACTLY) {
+        width = widthSize;
+    } else {
+        width = calculateDefaultWidth();
+        if (widthMode == MeasureSpec.AT_MOST) {
+            width = Math.min(width, widthSize);
+        }
+    }
+    
+    setMeasuredDimension(width, height);
+}
+```
+
+### 4. 支持自定义属性
+```java
+public CircleView(Context context, AttributeSet attrs) {
+    super(context, attrs);
+    
+    TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.CircleView);
+    mRadius = ta.getDimensionPixelSize(R.styleable.CircleView_radius, 100);
+    ta.recycle();
+}
+```
+
+### 5. 处理触摸事件
+```java
+@Override
+public boolean onTouchEvent(MotionEvent event) {
+    switch (event.getAction()) {
+        case MotionEvent.ACTION_DOWN:
+            // 处理按下
+            return true;
+        case MotionEvent.ACTION_MOVE:
+            // 处理移动
+            return true;
+        case MotionEvent.ACTION_UP:
+            // 处理抬起
+            return true;
+    }
+    return super.onTouchEvent(event);
+}
+```
