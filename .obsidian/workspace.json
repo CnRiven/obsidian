@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "1abc5c5ba3699bc4",
+        "id": "c4f097c7edc0b5d8",
         "type": "tabs",
         "children": [
           {
-            "id": "2b213eeef8a6312c",
+            "id": "7043acc31e9df9b1",
             "type": "leaf",
             "state": {
               "type": "empty",
@@ -188,9 +188,17 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "2b213eeef8a6312c",
+  "active": "7043acc31e9df9b1",
   "lastOpenFiles": [
+    "Agentara Underground 分享/Skill 101.md",
+    "Agentara Underground 分享/Harness 101 - Claude Code Agent 里的常用工具一览.md",
+    "Agentara Underground 分享/Harness 101.md",
+    "Agentara Underground 分享/AIGC.md",
+    "Agentara Underground 分享/一个 AI Builder 的随想.md",
     "Agentara Underground 分享/为爱发电.md",
+    "Agentara Underground 分享/目录总览.md",
+    "Agentara Underground 分享/开源项目.md",
+    "Agentara Underground 分享/公开课 101.md",
     "Agentara Underground 分享/assets/为爱发电/file-20260522151305647.json",
     "Agentara Underground 分享/assets/为爱发电",
     "Agentara Underground 分享/assets",
@@ -215,17 +223,10 @@
     "android_knowledge/内存优化 - OOM 与内存泄漏.md",
     "android_knowledge/大纲.md",
     "android_knowledge/HashMap 原理与源码分析.md",
-    "android_knowledge/必会知识点.md",
-    "android_knowledge/并发编程基础 - volatile synchronized 线程池.md",
-    "android_knowledge/Jetpack 组件原理.md",
-    "android_knowledge/Handler 机制原理详解.md",
-    "Clippings/两万字最全HashMap面试题总结，持续更新中.md",
-    "Clippings/⁣⁢‬​‌⁤﻿⁤‌‬⁤⁣⁣‬​‬‬‌⁤‬⁢⁤‬⁣﻿‬‬⁢‌​⁤‬⁢⁣⁡‍‌‌‍⁤‬﻿‬⁢‍‍‬⁢​性能测试自动化手顺（适用 Win+Mac+Linux） - 飞书云文档.md",
     "Clippings",
     "android_knowledge/assets/Android Framework相关/file-20260513151600724.png",
     "android_knowledge/assets/Android Framework相关/file-20260513151527562.png",
     "android_knowledge/assets/Android Framework相关",
-    "android_knowledge/assets",
-    "android_knowledge/RecycleView缓存机制.md"
+    "android_knowledge/assets"
   ]
 }
