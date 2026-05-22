@@ -19,13 +19,14 @@
 | 切换 | 用户态，无需系统调用 | 内核态，需要系统调用 |
 | 并发 | 可以轻松创建数万个 | 数量有限 |
 | 取消 | 支持 | 需要手动处理 |
+| 写法 | 顺序写法 | 回调或 RxJava |
 
 ### 3. 协程的核心概念
 
 ```kotlin
 // 协程作用域
 GlobalScope.launch {
-    // 全局作用域，生命周期与应用一致
+    // 全局作用域，生命周期与应用一致（不推荐）
 }
 
 CoroutineScope(Dispatchers.Main).launch {
@@ -33,11 +34,11 @@ CoroutineScope(Dispatchers.Main).launch {
 }
 
 viewModelScope.launch {
-    // ViewModel 作用域
+    // ViewModel 作用域（推荐）
 }
 
 lifecycleScope.launch {
-    // Lifecycle 作用域
+    // Lifecycle 作用域（推荐）
 }
 
 // 协程构建器
@@ -51,7 +52,7 @@ async {
 }
 
 runBlocking {
-    // 阻塞当前线程
+    // 阻塞当前线程（不推荐在 Android 中使用）
 }
 ```
 
@@ -89,25 +90,24 @@ suspend fun fetchData(): String {
     return "Data"
 }
 
-// 转换后
+// 转换后（简化）
 fun fetchData(continuation: Continuation<String>): Any? {
     // Continuation 保存了协程的状态
     
-    if (continuation is fetchData.ContinuationImpl) {
-        val label = continuation.label
-        
-        when (label) {
-            0 -> {
-                continuation.label = 1
-                val result = delay(1000, continuation)
-                if (result == COROUTINE_SUSPENDED) {
-                    return COROUTINE_SUSPENDED // 挂起
-                }
+    val label = (continuation as? FetchDataContinuationImpl)?.label ?: 0
+    
+    when (label) {
+        0 -> {
+            // 第一次调用
+            (continuation as FetchDataContinuationImpl).label = 1
+            val result = delay(1000, continuation)
+            if (result == COROUTINE_SUSPENDED) {
+                return COROUTINE_SUSPENDED // 挂起
             }
-            1 -> {
-                // 恢复执行
-                return "Data"
-            }
+        }
+        1 -> {
+            // 恢复执行
+            return "Data"
         }
     }
     
@@ -161,7 +161,7 @@ Dispatchers.Unconfined {
 ### 3. 切换线程
 
 ```kotlin
-// 方法一：使用 withContext
+// 方法一：使用 withContext（推荐）
 viewModelScope.launch {
     val data = withContext(Dispatchers.IO) {
         // 切换到 IO 线程
@@ -198,6 +198,9 @@ job.cancel()
 
 // 等待协程完成
 job.join()
+
+// 取消并等待
+job.cancelAndJoin()
 ```
 
 ### 2. async
@@ -209,7 +212,7 @@ val deferred = GlobalScope.async {
     "Result"
 }
 
-// 获取结果
+// 获取结果（挂起）
 val result = deferred.await()
 
 // 并发执行
@@ -235,6 +238,19 @@ fun main() = runBlocking {
         println("World")
     }
     println("Hello")
+}
+```
+
+### 4. withContext
+
+```kotlin
+// 切换上下文执行
+suspend fun fetchData(): String {
+    return withContext(Dispatchers.IO) {
+        // 在 IO 线程执行
+        repository.getData()
+    }
+    // 返回主线程
 }
 ```
 
@@ -343,6 +359,15 @@ val job = GlobalScope.launch {
         delay(500)
     }
 }
+
+// 使用 yield()
+val job = GlobalScope.launch {
+    repeat(1000) { i ->
+        yield() // 检查取消并让出执行权
+        println("I'm sleeping $i ...")
+        delay(500)
+    }
+}
 ```
 
 ### 3. 使用 try-finally 释放资源
@@ -357,6 +382,26 @@ val job = GlobalScope.launch {
     } finally {
         println("I'm running finally")
         // 释放资源
+    }
+}
+```
+
+### 4. 不可取消的代码块
+
+```kotlin
+val job = GlobalScope.launch {
+    try {
+        repeat(1000) { i ->
+            println("I'm sleeping $i ...")
+            delay(500)
+        }
+    } finally {
+        withContext(NonCancellable) {
+            // 不可取消的代码块
+            println("I'm running finally")
+            delay(1000) // 不会被取消
+            println("I'm still running")
+        }
     }
 }
 ```
@@ -377,7 +422,7 @@ val job = GlobalScope.launch {
 fun fetchNumbers(): Flow<Int> = flow {
     for (i in 1..3) {
         delay(100)
-        emit(i)
+        emit(i) // 发射值
     }
 }
 
@@ -400,13 +445,13 @@ flow.map { it * 2 }
 flow.filter { it > 0 }
 flow.take(3)
 flow.drop(2)
-flow.flatMapConcat { ... }
-flow.flatMapMerge { ... }
-flow.flatMapLatest { ... }
+flow.flatMapConcat { ... } // 顺序执行
+flow.flatMapMerge { ... }  // 并发执行
+flow.flatMapLatest { ... } // 只保留最新
 
 // 组合操作符
-flow1.zip(flow2) { a, b -> a + b }
-flow1.combine(flow2) { a, b -> a + b }
+flow1.zip(flow2) { a, b -> a + b } // 一一对应
+flow1.combine(flow2) { a, b -> a + b } // 任意变化
 
 // 终端操作符
 flow.collect { ... }
@@ -417,7 +462,31 @@ flow.reduce { acc, value -> acc + value }
 flow.fold(initial) { acc, value -> acc + value }
 ```
 
-### 4. StateFlow 和 SharedFlow
+### 4. Flow 异常处理
+
+```kotlin
+// catch 操作符
+flow.catch { e ->
+    println("Caught: $e")
+}
+.collect { value ->
+    println(value)
+}
+
+// onCompletion 操作符
+flow.onCompletion { cause ->
+    if (cause == null) {
+        println("Flow completed successfully")
+    } else {
+        println("Flow completed with error: $cause")
+    }
+}
+.collect { value ->
+    println(value)
+}
+```
+
+### 5. StateFlow 和 SharedFlow
 
 ```kotlin
 // StateFlow（有初始值，只保留最新值）
@@ -448,6 +517,16 @@ lifecycleScope.launch {
     }
 }
 ```
+
+### 6. StateFlow vs LiveData
+
+| 特性 | StateFlow | LiveData |
+|------|-----------|----------|
+| 初始值 | 必须有 | 可选 |
+| 生命周期感知 | 需要配合 | 自动 |
+| 操作符 | 丰富 | 有限 |
+| 多平台支持 | 支持 | 仅 Android |
+| 线程切换 | 自动 | 自动 |
 
 ---
 
@@ -515,6 +594,29 @@ viewModelScope.launch {
 }
 ```
 
+### 5. 取消协程
+
+```kotlin
+class MyViewModel : ViewModel() {
+    private var job: Job? = null
+    
+    fun loadData() {
+        job?.cancel()
+        job = viewModelScope.launch {
+            val data = withContext(Dispatchers.IO) {
+                repository.getData()
+            }
+            _uiState.value = data
+        }
+    }
+    
+    override fun onCleared() {
+        super.onCleared()
+        job?.cancel()
+    }
+}
+```
+
 ---
 
 ## 九、面试高频问题
@@ -523,6 +625,7 @@ viewModelScope.launch {
 - 协程是用户态的，线程是内核态的
 - 协程开销小，可以创建数万个
 - 协程支持挂起和恢复，不阻塞线程
+- 协程可以顺序写法，避免回调地狱
 
 ### Q2: suspend 关键字的作用？
 - 标记函数为挂起函数
@@ -555,13 +658,72 @@ viewModelScope.launch {
 | 生命周期感知 | 需要配合 | 自动 |
 | 背压支持 | 支持 | 不支持 |
 
+### Q7: 协程的取消原理？
+- 协程定期检查取消状态
+- delay()、yield() 等挂起函数会检查取消
+- 可以手动检查 isActive 或调用 ensureActive()
+
+### Q8: 为什么避免 GlobalScope？
+- GlobalScope 的生命周期与应用一致
+- 无法自动取消
+- 可能导致内存泄漏
+
 ---
 
 ## 十、最佳实践
 
-1. **使用 viewModelScope/lifecycleScope**：自动取消
-2. **使用 withContext 切换线程**：避免嵌套 launch
-3. **使用 SupervisorJob**：子协程失败不影响其他
-4. **使用 StateFlow 替代 LiveData**：更强大的操作符
-5. **处理异常**：try-catch 或 CoroutineExceptionHandler
-6. **避免 GlobalScope**：生命周期不受管理
+### 1. 使用 viewModelScope/lifecycleScope
+```kotlin
+// 自动取消
+viewModelScope.launch {
+    // 任务
+}
+```
+
+### 2. 使用 withContext 切换线程
+```kotlin
+// 避免嵌套 launch
+suspend fun fetchData(): Data {
+    return withContext(Dispatchers.IO) {
+        repository.getData()
+    }
+}
+```
+
+### 3. 使用 SupervisorJob
+```kotlin
+// 子协程失败不影响其他
+val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+```
+
+### 4. 使用 StateFlow 替代 LiveData
+```kotlin
+// 更强大的操作符
+private val _state = MutableStateFlow(initialState)
+val state: StateFlow<State> = _state.asStateFlow()
+```
+
+### 5. 处理异常
+```kotlin
+// try-catch
+viewModelScope.launch {
+    try {
+        // 任务
+    } catch (e: Exception) {
+        // 处理异常
+    }
+}
+```
+
+### 6. 避免 GlobalScope
+```kotlin
+// 错误
+GlobalScope.launch {
+    // 任务
+}
+
+// 正确
+viewModelScope.launch {
+    // 任务
+}
+```
