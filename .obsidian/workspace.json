@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "android_knowledge/Binder 跨进程通信原理.md",
+                "file": "Agentara Underground 分享/为爱发电.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Binder 跨进程通信原理"
+              "title": "为爱发电"
             }
           }
         ]
@@ -192,8 +192,12 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "07e49e886aa0f3d4",
+  "active": "912c55f49475cf21",
   "lastOpenFiles": [
+    "Agentara Underground 分享/assets/为爱发电/file-20260522151305647.json",
+    "Agentara Underground 分享/assets/为爱发电",
+    "Agentara Underground 分享/assets",
+    "android_knowledge/Binder 跨进程通信原理.md",
     "Agentara Underground 分享/为爱发电.md",
     "Agentara Underground 分享",
     "android_knowledge/Kotlin 协程详解.md",
@@ -227,9 +231,6 @@
     "android_knowledge/assets/Android Framework相关",
     "android_knowledge/assets",
     "android_knowledge/RecycleView缓存机制.md",
-    "手机测试笔记.md",
-    "personal",
-    "未命名文件夹",
-    "articles"
+    "personal"
   ]
 }
