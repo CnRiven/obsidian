@@ -4,21 +4,17 @@
     "type": "split",
     "children": [
       {
-        "id": "eb72490b52903361",
+        "id": "1abc5c5ba3699bc4",
         "type": "tabs",
         "children": [
           {
-            "id": "07e49e886aa0f3d4",
+            "id": "2b213eeef8a6312c",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Agentara Underground 分享/为爱发电.md",
-                "mode": "source",
-                "source": false
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "为爱发电"
+              "title": "新标签页"
             }
           }
         ]
@@ -192,13 +188,13 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "912c55f49475cf21",
+  "active": "2b213eeef8a6312c",
   "lastOpenFiles": [
+    "Agentara Underground 分享/为爱发电.md",
     "Agentara Underground 分享/assets/为爱发电/file-20260522151305647.json",
     "Agentara Underground 分享/assets/为爱发电",
     "Agentara Underground 分享/assets",
     "android_knowledge/Binder 跨进程通信原理.md",
-    "Agentara Underground 分享/为爱发电.md",
     "Agentara Underground 分享",
     "android_knowledge/Kotlin 协程详解.md",
     "Harness/‌​​‍​⁤⁣⁤‬​⁡⁣⁢⁣⁣⁣⁣⁢⁣​⁤⁡⁢⁤​⁣⁤⁤‍⁤‌⁤⁣﻿​﻿‬﻿​‍⁤⁡​‌​⁡‍⁣‌﻿飞书云文档.md",
@@ -230,7 +226,6 @@
     "android_knowledge/assets/Android Framework相关/file-20260513151527562.png",
     "android_knowledge/assets/Android Framework相关",
     "android_knowledge/assets",
-    "android_knowledge/RecycleView缓存机制.md",
-    "personal"
+    "android_knowledge/RecycleView缓存机制.md"
   ]
 }
