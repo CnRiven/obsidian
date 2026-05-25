@@ -71,4 +71,4 @@ LangChain 团队的开源项目，设计初衷：逆向工程 Claude Code 的成
 
 ## 📷 文档图片
 
-![img_D0Jzd84c6oxHBgxN82VcfRMVndh_0_1024_559.png](assets/Harness 101/Harness 101 - 从 for 循环到自治系统的进化之路/img_D0Jzd84c6oxHBgxN82VcfRMVndh_0_1024_559.png)
+![img_D0Jzd84c6oxHBgxN82VcfRMVndh_0_1024_559.png](../assets/Harness 101/Harness 101 - 从 for 循环到自治系统的进化之路/img_D0Jzd84c6oxHBgxN82VcfRMVndh_0_1024_559.png)

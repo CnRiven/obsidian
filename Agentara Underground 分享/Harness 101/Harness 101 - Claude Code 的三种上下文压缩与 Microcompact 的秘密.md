@@ -56,4 +56,4 @@
 
 ## 📷 文档图片
 
-![img_TDHbdiMFUoXEXoxYsDVcNiXYn2f_0_3832_1642.png](assets/Harness 101/Harness 101 - Claude Code 的三种上下文压缩与 Microcompact 的秘密/img_TDHbdiMFUoXEXoxYsDVcNiXYn2f_0_3832_1642.png)
+![img_TDHbdiMFUoXEXoxYsDVcNiXYn2f_0_3832_1642.png](../assets/Harness 101/Harness 101 - Claude Code 的三种上下文压缩与 Microcompact 的秘密/img_TDHbdiMFUoXEXoxYsDVcNiXYn2f_0_3832_1642.png)

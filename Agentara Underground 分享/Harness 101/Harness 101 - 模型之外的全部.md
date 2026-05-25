@@ -84,4 +84,4 @@ Harness 包含六类：
 
 ## 📷 文档图片
 
-![img_KIYJdSjqoodE93xsl2AcOBFonvd_0_1280_548.png](assets/Harness 101/Harness 101 - 模型之外的全部/img_KIYJdSjqoodE93xsl2AcOBFonvd_0_1280_548.png)
+![img_KIYJdSjqoodE93xsl2AcOBFonvd_0_1280_548.png](../assets/Harness 101/Harness 101 - 模型之外的全部/img_KIYJdSjqoodE93xsl2AcOBFonvd_0_1280_548.png)
