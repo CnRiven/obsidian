@@ -1,87 +1,54 @@
-# Harness 101：模型之外的全部
+# Harness 101 - 模型之外的全部
 
 > 来源: 飞书云文档 (KIYJdSjqoodE93xsl2AcOBFonvd)
 
 ---
 
-## 前言
-
-> Agent = Model + Harness. If you're not the model, you're the harness.
-
-Viv Trivedy 团队最近做了一件让人看着不可思议的事——他们没换模型，只换了 harness，把一个 Coding Agent 在 Terminal Bench 2.0 上的排名从 Top 30 直接拉到了 Top 5。
-
+# 前言​
+Viv Trivedy 团队最近做了一件让人看着不可思议的事——他们没换模型，只换了 harness，把一个 Coding Agent 在Terminal Bench 2.0上的排名从 Top 30 直接拉到了 Top 5。同样的模型权重、同样的题面、同样的预算，差别只在「模型之外的所有东西」。如果你看该榜单，就知道这相当于跨过了好几代模型升级才能换到的位置。​
+​
+🎁
+你知道吗——Terminal Bench 2.0？​
+Terminal Bench 是 Stanford 与 Laude Institute 主导的端到端真实工作流基准，覆盖编译、训练、运维、调试等近百个真实任务，比 SWE-bench 更接近「日常开发」。它的 2.0 版本在题目上更难、在 harness 上更可观测，已经成了模型厂商发布稿里的常客。同模型不同 harness 跑分能差出几十个百分位——这是 harness 工程能撬动多大杠杆的最直接证据。​
+​
+🎁
+你知道吗——Terminal Bench 2.0？​
+Terminal Bench 是 Stanford 与 Laude Institute 主导的端到端真实工作流基准，覆盖编译、训练、运维、调试等近百个真实任务，比 SWE-bench 更接近「日常开发」。它的 2.0 版本在题目上更难、在 harness 上更可观测，已经成了模型厂商发布稿里的常客。同模型不同 harness 跑分能差出几十个百分位——这是 harness 工程能撬动多大杠杆的最直接证据。​
+🎁
+你知道吗——Terminal Bench 2.0？​
+Terminal Bench 是 Stanford 与 Laude Institute 主导的端到端真实工作流基准，覆盖编译、训练、运维、调试等近百个真实任务，比 SWE-bench 更接近「日常开发」。它的 2.0 版本在题目上更难、在 harness 上更可观测，已经成了模型厂商发布稿里的常客。同模型不同 harness 跑分能差出几十个百分位——这是 harness 工程能撬动多大杠杆的最直接证据。​
+你知道吗——Terminal Bench 2.0？​
+Terminal Bench 是 Stanford 与 Laude Institute 主导的端到端真实工作流基准，覆盖编译、训练、运维、调试等近百个真实任务，比 SWE-bench 更接近「日常开发」。它的 2.0 版本在题目上更难、在 harness 上更可观测，已经成了模型厂商发布稿里的常客。同模型不同 harness 跑分能差出几十个百分位——这是 harness 工程能撬动多大杠杆的最直接证据。​
+笔者最近在写 Harness 系列（见下文链接）：上一篇刚讲完《​
+👁️‍🗨️
+Harness 101：从 ReAct Loop 讲起》，再上一篇聊了​
+🗜️
+Harness 101：Context Offloading 机制。写下来一个观察是，一线工程师每天都在调 Skill、写 Hook、设计 Sub-Agent，把工具描述改了又改、把 CLAUDE.md 删了又添，但很少有人退后一步问一个问题：我们到底在工程化什么？这件事如果没有名字，就很难积累。​
+4 月底读到了 Addy Osmani 那篇 Agent Harness Engineering，他给了一个超级简洁的等式：​
+​
+代码块​
+Python
+自动换行
+复制
+agent = models + harness​
+​
+代码块​
+Python
+自动换行
+复制
+agent = models + harness​
+代码块​
+Python
+自动换行
+复制
+agent = models + harness​
+本文是带着工程师立场的二次解读。笔者想用它回答三个你也许正在心里反复问自己的问题：​
+1.
+Harness 究竟是什么？这个词在小红书、司内的 ByteTech 上已经流行到我们不想再听到，然而它不是抽象概念，而是一份你今天就能列出清单的工程对象。​
+2.
+为什么大多数 Agent 失败不是模型问题？而你又凭什么相信「换 harness」比「等模型」更划算？​
+3.
+当模型一代比一代强，harness 工程师的价值往哪里走？这是个比想象中更长程的问题。​
+接下来的八节，就围绕这三问展开。​
 ---
-
-## 框架
-
-> A coding agent is the model plus everything you build around it.
-
-Harness 包含六类：
-1. **指令层**：System Prompt、CLAUDE.md、Skill 文件、Sub-Agent 角色 Prompt
-2. **工具层**：Tool 定义与 description、MCP Server 接入与过滤
-3. **运行环境**：文件系统、sandbox、浏览器、Shell 与权限模型
-4. **编排逻辑**：Sub-Agent spawn、handoff 协议、Model Routing
-5. **确定性注入**：Hook、Middleware、PreToolUse/PostToolUse
-6. **可观测性**：日志、Trace、Token 与 Cost 计量
-
----
-
-## 错觉
-
-> It's not a model problem. It's a configuration problem.
-
-当你觉得「模型今天怎么这么笨」，回头去查 CLAUDE.md 与 Hook，大约 80% 的情况会被自己的配置打脸。
-
----
-
-## 棘轮（Ratchet）
-
-> Every line in a good AGENTS.md should be traceable back to a specific thing that went wrong.
-
-- **加规则**：只在真实失败发生时入场
-- **减规则**：下一代模型出来后，挑几条旧规则压力测试
-
----
-
-## 解剖：五块组件
-
-1. **Filesystem 与 Git**：持久化记忆
-2. **Bash 与代码执行**：通用工具
-3. **Sandbox 与默认工具链**：安全隔离
-4. **Memory 与 Search**：跨会话与跨训练截止日
-5. **Hooks**：纪律的工程化
-
-> 成功静默，失败喧哗。
-
----
-
-## 长程（Long-Horizon）
-
-### Context 战线
-- **Compaction**：压缩老 context
-- **Tool-call Offloading**：超大输出写磁盘
-- **Skills with Progressive Disclosure**：按需加载能力
-
-### 调度战线
-- **Ralph Loop**：用 Hook 拦截模型的 exit attempt
-- **Plan-then-Act**：模型先把目标拆成 plan 文件
-- **Planner/Generator/Evaluator 分离**
-
----
-
-## 收敛
-
-> Harnesses don't shrink, they move.
-
----
-
-## 结语
-
-> Every component in a harness encodes an assumption about what the model can't do on its own.
-
-模型由实验室推动，harness 由我们推动。
-
-
-## 📷 文档图片
-
-![[img_KIYJdSjqoodE93xsl2AcOBFonvd_0_1280_548.png]]
+![[img_KIYJdSjqoodE93xsl2AcOBFonvd_0.png]]

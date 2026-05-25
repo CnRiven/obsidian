@@ -1,59 +1,14 @@
-# Harness 101：从 Chatbot 到 Long-horizon Agent
+# Harness 101 - 从 Chatbot 到 Long-horizon Agent
 
 > 来源: 飞书云文档 (B1mfdU21eonlkuxBA54c58bxnSb)
 
 ---
 
-## 序言
-
-Long-horizon Agent 是一种能够在更长时间跨度内自主运行的智能体——从几分钟到数小时不等。
-
+# 序言​
+最近笔者在 YouTube 上看了一期专题访谈，LangChain 的作者 + 联合创始人 Harrison Chase 在红杉资本的播客里深入讨论了 Long-horizon 以及 Harness 的概念演进。听完演讲后，我对这期专访深有感触，随着 AIME、Coding Agent、OpenClaw 等产品的火爆，越来越多的人慢慢接受了 AI 不再是聊天框里“打字机”般的直接输出最终答案，而是和一个数字员工一样，在长时间的作业、反复思考迭代后，最终得到一份超高质量的产物（Artifacts）。​
+这期专访让笔者对 AI Agent 的技术路线有了更清晰的认知，也坚定了笔者 2026 年对 Long-horizon Agent 和 Harness 这两个方向的判断。如果你还没有听过这一期博客，就让笔者带着大家一起回顾一下这期干货满满的播客吧！​
 ---
+# Long-horizon Agent​
+![[img_B1mfdU21eonlkuxBA54c58bxnSb_0.png]]
 
-## Long-horizon Agent 的核心特征
-
-1. **运行时间更长**：不再是"调用一次 LLM 就结束"
-2. **自主决策能力**：LLM 在循环中不断决定下一步行动
-3. **产出"初稿"而非最终产品**：人类用户沿着初稿进行后续修改
-
----
-
-## 典型应用场景
-
-- **Coding**：Claude Code、Cursor 等
-- **AI SRE**：深度日志分析和故障排查
-- **Research & Report Generation**：Deep Research 类产品
-- **高级客户支持**：后台运行生成完整上下文报告
-
----
-
-## 什么是 Harness？
-
-> LangGraph 是 runtime，LangChain 是 abstraction，Deep Agents 是 harness。
-
-Harness 包含：
-- 内置的 Planning Tool
-- Compaction 机制
-- File System 工具
-- Starter Prompts
-- Memory 系统
-- Sub-agents 机制
-
----
-
-## AI Agent 发展的三个时代
-
-1. **第一阶段**：简单的 Prompting 和 Chaining
-2. **第二阶段**：Cognitive Architecture 时代
-3. **第三阶段**：Long-horizon Agent 时代（2025 年中至今）
-
----
-
-## 结语
-
-> 我们从 scaffolds 转向了 harnesses。
-
-
-## 📷 文档图片
-
-![[img_B1mfdU21eonlkuxBA54c58bxnSb_0_1280_714.png]]
+Long-horizon Agent，笔者将其翻译为“长程 Agent”。顾名思义，“他”是一种能够在更长时间跨度内自主运行的智能体——从几分钟到几小时不等。​
