@@ -36,3 +36,8 @@ npx skills add https://github.com/agentara/skills/blob/main/skills/productivity/
 ## 结语
 
 > 好的 Skill 不只是让 Agent 会写，而是让读者重新愿意读、能操作、能继续反馈。
+
+
+## 📷 文档图片
+
+![img_HZHVd6F5uoZfZQxJokPc75minEg_0_3824_1646.png](assets/Skill 101/Skill 101 - 当 HTML 替代 Markdown 作为输出/img_HZHVd6F5uoZfZQxJokPc75minEg_0_3824_1646.png)

@@ -152,3 +152,8 @@ class SearchableProvider(BaseProvider, Protocol):
 3. **AFS 真正的价值在 Provider 生态。**
 
 Agent 时代我们最该重学的，不是 Transformer，而是 Unix。模型已经够聪明了；缺的是一套像样的、窄到每个工程师都愿意去实现的接口规范。AFS 只是这条路上的一小步——把「按路径读写」这件事，重新还给 Agent。
+
+
+## 📷 文档图片
+
+![img_TP1edurd4oKu5DxP73Vc4Pb2nTa_0_3832_1642.png](assets/Harness 101/Harness 101 - 写给 Agent 的虚拟文件系统/img_TP1edurd4oKu5DxP73Vc4Pb2nTa_0_3832_1642.png)

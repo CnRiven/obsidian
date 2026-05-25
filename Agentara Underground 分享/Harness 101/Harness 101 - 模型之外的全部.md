@@ -80,3 +80,8 @@ Harness 包含六类：
 > Every component in a harness encodes an assumption about what the model can't do on its own.
 
 模型由实验室推动，harness 由我们推动。
+
+
+## 📷 文档图片
+
+![img_KIYJdSjqoodE93xsl2AcOBFonvd_0_1280_548.png](assets/Harness 101/Harness 101 - 模型之外的全部/img_KIYJdSjqoodE93xsl2AcOBFonvd_0_1280_548.png)

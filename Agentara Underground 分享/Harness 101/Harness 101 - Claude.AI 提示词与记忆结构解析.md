@@ -89,3 +89,8 @@ Claude 的 system prompt 是一块**沉积岩**——不是精心设计的大厦
 4. **Hook**：生命周期拦截器
 
 > 沉积岩不是缺陷。沉积岩是活过来的证据——而可被第三方贡献的沉积岩，才是长得出生态的土壤。
+
+
+## 📷 文档图片
+
+![img_HKRzdO2YvodWa2xjNLWcJI3KnEA_0_1280_1152.png](assets/Harness 101/Harness 101 - Claude.AI 提示词与记忆结构解析/img_HKRzdO2YvodWa2xjNLWcJI3KnEA_0_1280_1152.png)

@@ -53,3 +53,8 @@
 1. 显式声明并行能力
 2. 为每个子任务提供足够具体的指令
 3. 设计好 fan-out / fan-in 的接口
+
+
+## 📷 文档图片
+
+![img_DZIudT0vHoBpgdx6VvgckFJbn5c_0_5500_3072.png](assets/Skill 101/Skill 101 - 并行多任务/img_DZIudT0vHoBpgdx6VvgckFJbn5c_0_5500_3072.png)

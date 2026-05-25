@@ -53,3 +53,8 @@ clawdbot gateway restart
 ## 05｜使用
 
 在飞书里搜索机器人名字，给它发消息即可。
+
+
+## 📷 文档图片
+
+![img_X30SdZNVRobbRhxUyrRchMT1nSd_0_1280_908.png](assets/工具教程/Clawdbot安装及接入飞书/img_X30SdZNVRobbRhxUyrRchMT1nSd_0_1280_908.png)
