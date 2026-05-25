@@ -57,4 +57,4 @@ clawdbot gateway restart
 
 ## 📷 文档图片
 
-![img_X30SdZNVRobbRhxUyrRchMT1nSd_0_1280_908.png](../assets/工具教程/Clawdbot安装及接入飞书/img_X30SdZNVRobbRhxUyrRchMT1nSd_0_1280_908.png)
+![[img_X30SdZNVRobbRhxUyrRchMT1nSd_0_1280_908.png]]

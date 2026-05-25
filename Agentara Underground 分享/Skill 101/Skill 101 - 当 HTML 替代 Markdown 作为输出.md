@@ -40,4 +40,4 @@ npx skills add https://github.com/agentara/skills/blob/main/skills/productivity/
 
 ## 📷 文档图片
 
-![img_HZHVd6F5uoZfZQxJokPc75minEg_0_3824_1646.png](../assets/Skill 101/Skill 101 - 当 HTML 替代 Markdown 作为输出/img_HZHVd6F5uoZfZQxJokPc75minEg_0_3824_1646.png)
+![[img_HZHVd6F5uoZfZQxJokPc75minEg_0_3824_1646.png]]

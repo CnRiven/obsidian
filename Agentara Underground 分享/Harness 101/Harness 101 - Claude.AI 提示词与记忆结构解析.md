@@ -93,4 +93,4 @@ Claude 的 system prompt 是一块**沉积岩**——不是精心设计的大厦
 
 ## 📷 文档图片
 
-![img_HKRzdO2YvodWa2xjNLWcJI3KnEA_0_1280_1152.png](../assets/Harness 101/Harness 101 - Claude.AI 提示词与记忆结构解析/img_HKRzdO2YvodWa2xjNLWcJI3KnEA_0_1280_1152.png)
+![[img_HKRzdO2YvodWa2xjNLWcJI3KnEA_0_1280_1152.png]]

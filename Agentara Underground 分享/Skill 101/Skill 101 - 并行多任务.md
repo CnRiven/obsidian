@@ -57,4 +57,4 @@
 
 ## 📷 文档图片
 
-![img_DZIudT0vHoBpgdx6VvgckFJbn5c_0_5500_3072.png](../assets/Skill 101/Skill 101 - 并行多任务/img_DZIudT0vHoBpgdx6VvgckFJbn5c_0_5500_3072.png)
+![[img_DZIudT0vHoBpgdx6VvgckFJbn5c_0_5500_3072.png]]

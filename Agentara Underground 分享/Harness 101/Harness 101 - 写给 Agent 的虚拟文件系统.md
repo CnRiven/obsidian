@@ -156,4 +156,4 @@ Agent 时代我们最该重学的，不是 Transformer，而是 Unix。模型已
 
 ## 📷 文档图片
 
-![img_TP1edurd4oKu5DxP73Vc4Pb2nTa_0_3832_1642.png](../assets/Harness 101/Harness 101 - 写给 Agent 的虚拟文件系统/img_TP1edurd4oKu5DxP73Vc4Pb2nTa_0_3832_1642.png)
+![[img_TP1edurd4oKu5DxP73Vc4Pb2nTa_0_3832_1642.png]]
