@@ -56,4 +56,4 @@ Harness 包含：
 
 ## 📷 文档图片
 
-![img_B1mfdU21eonlkuxBA54c58bxnSb_0_1280_714.png](../assets/Harness 101/Harness 101 - 从 Chatbot 到 Long-horizon Agent/img_B1mfdU21eonlkuxBA54c58bxnSb_0_1280_714.png)
+![[img_B1mfdU21eonlkuxBA54c58bxnSb_0_1280_714.png]]
