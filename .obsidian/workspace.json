@@ -4,21 +4,17 @@
     "type": "split",
     "children": [
       {
-        "id": "aa75ddea8fa9eb7f",
+        "id": "4509724f8bf84da7",
         "type": "tabs",
         "children": [
           {
-            "id": "cbdc9f1687d90152",
+            "id": "e7a7b303c61786dc",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Android_Notes/1.Activity/Activity.md",
-                "mode": "source",
-                "source": false
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "Activity"
+              "title": "新标签页"
             }
           }
         ]
@@ -197,7 +193,7 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "cbdc9f1687d90152",
+  "active": "e7a7b303c61786dc",
   "lastOpenFiles": [
     "Android_Notes/1.Activity/Activity.md",
     "Android_Notes/2.Service/Service.md",
