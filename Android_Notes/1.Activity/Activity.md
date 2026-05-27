@@ -343,7 +343,7 @@ goodsId和name代表传递的两个参数
     </intent-filter>
 ```
 掉用
-```
+```java
 Intent intent = new Intent(Intent.ACTION_VIEW,Uri.parse("hr://test:8080/goods?name=test"));
 
 startActivity(intent);
