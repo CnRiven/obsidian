@@ -36,6 +36,7 @@ App进程的binder线程（ApplicationThread）在收到请求后，通过handle
 
 
 ![activity1](../img/activity1.png)
+
 ## 2.onSaveInstanceState(),onRestoreInstanceState的掉用时机
 
 **onSaveInstanceState(Bundle outState)会在以下情况被调用：**
