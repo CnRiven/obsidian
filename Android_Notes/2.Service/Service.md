@@ -1,4 +1,4 @@
-#### 1.service 的生命周期，两种启动方式的区别
+## 1.service 的生命周期，两种启动方式的区别
 
 **startService**
 
@@ -49,9 +49,9 @@ onCreate() -> onbind() -> onUnbind()-> onDestroy()
 
 
 
-#### 2.Service启动流程
+## 2.Service启动流程
 
-http://gityuan.com/2016/03/06/start-service/
+[http://gityuan.com/2016/03/06/start-service/](http://gityuan.com/2016/03/06/start-service/)
 
 <img src="../img/service1.jpg" width = "600" height = "400" alt="图片名称" align=center />
 
@@ -80,7 +80,7 @@ http://gityuan.com/2016/03/06/start-service/
 ![service3](../img/service3.png)
 
 
-#### 3.Service与Activity怎么实现通信
+## 3.Service与Activity怎么实现通信
 
 
 **通过Binder对象**
@@ -94,7 +94,7 @@ http://gityuan.com/2016/03/06/start-service/
 **Service通过BroadCast广播与Activity通信**
 
 
-#### 4.IntentService是什么,IntentService原理，应用场景及其与Service的区别
+## 4.IntentService是什么,IntentService原理，应用场景及其与Service的区别
 
 what
 
@@ -126,7 +126,7 @@ IntentService会创建独立的worker线程来处理所有的Intent请求  Servi
 所有请求处理完成后，IntentService会自动停止，无需调用stopSelf()方法停止Service。
 
 
-#### 5.Service 的 onStartCommand 方法有几种返回值?各代表什么意思?
+## 5.Service 的 onStartCommand 方法有几种返回值?各代表什么意思?
 
 
 
@@ -153,13 +153,13 @@ IntentService会创建独立的worker线程来处理所有的Intent请求  Servi
 
 
 
-#### 6.bindService和startService混合使用的生命周期以及怎么关闭
+## 6.bindService和startService混合使用的生命周期以及怎么关闭
 
 如果你只是想要启动一个后台服务长期进行某项任务，那么使用startService便可以了。如果你还想要与正在运行的Service取得联系，那么有两种方法：一种是使用broadcast，另一种是使用bindService。
 
 
 
-https://blog.csdn.net/u014520745/article/details/49669641
+[https://blog.csdn.net/u014520745/article/details/49669641](https://blog.csdn.net/u014520745/article/details/49669641)
 
 如果先startService，再bindService
 

@@ -1,13 +1,13 @@
 
 参考文章:  
-http://skyacer.github.io/archives/  
-https://wizardforcel.gitbooks.io/deepin-android-vol3/content/4.html  
- http://liuwangshu.cn/system/
+[http://skyacer.github.io/archives/](http://skyacer.github.io/archives/)  
+[https://wizardforcel.gitbooks.io/deepin-android-vol3/content/4.html](https://wizardforcel.gitbooks.io/deepin-android-vol3/content/4.html)  
+ [http://liuwangshu.cn/system/](http://liuwangshu.cn/system/)
 
-https://blog.csdn.net/itachi85/article/details/78186741
-http://liuwangshu.cn/system/
-https://coding.imooc.com/class/chapter/340.html#Anchor
-https://blog.csdn.net/freekiteyu/article/details/79483406
+[https://blog.csdn.net/itachi85/article/details/78186741](https://blog.csdn.net/itachi85/article/details/78186741)
+[http://liuwangshu.cn/system/](http://liuwangshu.cn/system/)
+[https://coding.imooc.com/class/chapter/340.html#Anchor](https://coding.imooc.com/class/chapter/340.html#Anchor)
+[https://blog.csdn.net/freekiteyu/article/details/79483406](https://blog.csdn.net/freekiteyu/article/details/79483406)
 
 
 
@@ -30,8 +30,10 @@ https://blog.csdn.net/freekiteyu/article/details/79483406
 (3).管理窗口动画  
    窗口间进行切换时，使用窗口动画可以显得更炫一些，窗口动画由WMS的动画子系统WindowAnimator来负责。
 
+```java
 (4).输入系统中转站  
 通过对窗口的触摸从而产生触摸事件，InputManagerService(IMS) 会对触摸事件进行处理，它会寻找一个最合适的窗口来处理触摸反馈信息，WMS 是窗口的管理者，它作为输入系统的中转站再合适不过了。
+```
 <img src="../img/clipboard.png" width = "600" height = "300" alt="图片名称" align=center />
  
 
@@ -145,7 +147,7 @@ APP端获得填充信息，获取与SurfaceFlinger通信的能力
  
  
 **11.什么是Surface**  
-https://blog.csdn.net/innost/article/details/47208337  
+[https://blog.csdn.net/innost/article/details/47208337](https://blog.csdn.net/innost/article/details/47208337)  
 Surface就像是UI的画布，App在Surface上作画,WindowManager创建一个Window时，
 WindowManager会为每一个Window创建一个Surface，并把该Surface传递给app以便应用在上面绘制内容。
 SurfaceFlinger分配完之后开始在Surface上绘制图像，来往其中的BufferQueue生产视图数据，

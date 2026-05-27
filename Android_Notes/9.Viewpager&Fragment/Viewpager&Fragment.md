@@ -1,11 +1,11 @@
-####  1.Fragment的生命周期 & 结合Activity的生命周期
+## 1.Fragment的生命周期 & 结合Activity的生命周期
 
-https://juejin.cn/post/6844903752114126855#heading-0
+[https://juejin.cn/post/6844903752114126855#heading-0](https://juejin.cn/post/6844903752114126855#heading-0)
 
 ![image_2](../img/image_2.png)
 
 
-#### 2.Activity和Fragment的通信方式， Fragment之间如何进行通信
+## 2.Activity和Fragment的通信方式， Fragment之间如何进行通信
 
 Activity和Fragment
 
@@ -28,9 +28,9 @@ Fragment之间
 3.Fragment 通过 getActivity 获取到Activity，Activity通过findFragmentByTag||findFragmentById获取Fragment,Fragment 实现接口.
 
 
-#### 3.为什么使用Fragment.setArguments(Bundle)传递参数
+## 3.为什么使用Fragment.setArguments(Bundle)传递参数
 
-https://www.jianshu.com/p/c06efe090589
+[https://www.jianshu.com/p/c06efe090589](https://www.jianshu.com/p/c06efe090589)
 
 Activity.onCreate(Bundle saveInstance)->Fragment.instantitate()
 
@@ -38,7 +38,7 @@ Activity.onCreate(Bundle saveInstance)->Fragment.instantitate()
 
 Activity重新创建时，会重新构建它所管理的Fragment，原先的Fragment的字段值将会全部丢失，但是通过Fragment.setArguments(Bundle bundle)方法设置的bundle会保留下来，并在重建时恢复。所以，尽量使用Fragment.setArguments(Bundle bundle)方式来进行参数传递。
 
-#### 4.FragmentPageAdapter和FragmentStatePageAdapter区别及使用场景
+## 4.FragmentPageAdapter和FragmentStatePageAdapter区别及使用场景
 
 使用FragmentPagerAdapter时    页面切换，只是调用detach，而不是remove，所以只执行onDestroyView，而不是onDestroy，不会摧毁Fragment实例，只会摧毁Fragment 的View；
 
@@ -50,13 +50,13 @@ Activity重新创建时，会重新构建它所管理的Fragment，原先的Frag
  页面很多时，可以考虑FragmentStatePagerAdapter
 
 
-#### 5.fragment懒加载
+## 5.fragment懒加载
 
 判断当前 Fragment 是否对用户可见，只是 onHiddenChanged() 是在 add+show+hide 模式下使用，  setUserVisibleHint 是在 ViewPager+Fragment 模式下使用。
 
-https://juejin.cn/post/6844904050698223624#heading-0
+[https://juejin.cn/post/6844904050698223624#heading-0](https://juejin.cn/post/6844904050698223624#heading-0)
 
-https://www.jianshu.com/p/bef74a4b6d5e
+[https://www.jianshu.com/p/bef74a4b6d5e](https://www.jianshu.com/p/bef74a4b6d5e)
 
 **老的懒加载处理方案**
 
@@ -86,13 +86,13 @@ https://www.jianshu.com/p/bef74a4b6d5e
 原因:FragmentPagerAdapter 在其 setPrimaryItem 方法中调用了 setMaxLifecycle,
 所以说onResume中执行懒加载
 
-#### 6.ViewPager2与ViewPager区别
+## 6.ViewPager2与ViewPager区别
 
-https://juejin.cn/post/6844904020553760782#heading-0
+[https://juejin.cn/post/6844904020553760782#heading-0](https://juejin.cn/post/6844904020553760782#heading-0)
 
 1. FragmentStateAdapter 替代FragmentStatePagerAdapter，PagerAdapter被RecyclerView.Adapter替代
 2. 支持竖直滑动，禁止滑动
 3. PageTransformer用来设置页面动画，设置页面间距
 4. 预加载当setOffscreenPageLimit被设置为OFFSCREEN_PAGE_LIMIT_DEFAULT时候会使用RecyclerView的缓存机制。
 
-#### 7.fragment嵌套问题
+## 7.fragment嵌套问题

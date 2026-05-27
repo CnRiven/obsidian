@@ -1,15 +1,15 @@
 
 
 
-####  1.RecyclerView的多级缓存机制,每一级缓存具体作用是什么,分别在什么场景下会用到哪些缓存
+## 1.RecyclerView的多级缓存机制,每一级缓存具体作用是什么,分别在什么场景下会用到哪些缓存
 
-https://zhooker.github.io/2017/08/14/%E5%85%B3%E4%BA%8ERecyclerview%E7%9A%84%E7%BC%93%E5%AD%98%E6%9C%BA%E5%88%B6%E7%9A%84%E7%90%86%E8%A7%A3/
+[https://zhooker.github.io/2017/08/14/%E5%85%B3%E4%BA%8ERecyclerview%E7%9A%84%E7%BC%93%E5%AD%98%E6%9C%BA%E5%88%B6%E7%9A%84%E7%90%86%E8%A7%A3/](https://zhooker.github.io/2017/08/14/%E5%85%B3%E4%BA%8ERecyclerview%E7%9A%84%E7%BC%93%E5%AD%98%E6%9C%BA%E5%88%B6%E7%9A%84%E7%90%86%E8%A7%A3/)
 
-https://www.wanandroid.com/wenda/show/14222
+[https://www.wanandroid.com/wenda/show/14222](https://www.wanandroid.com/wenda/show/14222)
 
-https://blog.csdn.net/u013700502/article/details/105058771
+[https://blog.csdn.net/u013700502/article/details/105058771](https://blog.csdn.net/u013700502/article/details/105058771)
 
-https://juejin.cn/post/6854573221702795277#heading-9
+[https://juejin.cn/post/6854573221702795277#heading-9](https://juejin.cn/post/6854573221702795277#heading-9)
 
 
 Scrap、Cache、ViewCacheExtension 、RecycledViewPool
@@ -25,7 +25,7 @@ Scrap缓存用在RecyclerView布局时，布局完成之后就会清空
 然后说怎么用，就是先从 1 级找，然后 2 级...然后4 级，找不到 create ViewHolder。
 
 
-https://www.jianshu.com/p/467ae8a7ca6e
+[https://www.jianshu.com/p/467ae8a7ca6e](https://www.jianshu.com/p/467ae8a7ca6e)
 
 mAttachedScrap/mChangedScrap
 
@@ -49,9 +49,9 @@ ViewCacheExtension
 ViewHolder在首先会缓存在 mCachedViews 中，当超过了个数（比如默认为2）， 就会添加到 RecycledViewPool 中。RecycledViewPool 会根据每个ViewType把ViewHolder分别存储在不同的列表中，每个ViewType最多缓存DEFAULT_MAX_SCRAP = 5 个ViewHolder
 
 
-####  2.RecyclerView的滑动回收复用机制
+## 2.RecyclerView的滑动回收复用机制
 
-https://www.jianshu.com/p/467ae8a7ca6e
+[https://www.jianshu.com/p/467ae8a7ca6e](https://www.jianshu.com/p/467ae8a7ca6e)
 
 
  RecyclerView 滑动的场景触发的回收复用机制工作时， 并不需要四级缓存都参与的。
@@ -71,7 +71,7 @@ https://www.jianshu.com/p/467ae8a7ca6e
 
 
 
-####  3.RecyclerView的刷新回收复用机制
+## 3.RecyclerView的刷新回收复用机制
 
 
 
@@ -91,9 +91,9 @@ dispatchLayoutStep1
 
 
 
-####  4.RecyclerView 为什么要预布局
+## 4.RecyclerView 为什么要预布局
 
-https://juejin.cn/post/6890288761783975950#heading-0
+[https://juejin.cn/post/6890288761783975950#heading-0](https://juejin.cn/post/6890288761783975950#heading-0)
 
 why
 
@@ -126,7 +126,7 @@ what
 
 
 
-####  5.ListView 与 RecyclerView区别
+## 5.ListView 与 RecyclerView区别
 
 1.布局效果
 
@@ -149,7 +149,7 @@ ListView缓存View。
 RecyclerView缓存RecyclerView.ViewHolder
 
 
-####  6.RecyclerView性能优化
+## 6.RecyclerView性能优化
 
 
 1.数据处理与视图加载分离

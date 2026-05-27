@@ -1,5 +1,5 @@
-https://juejin.im/post/6844903959581163528#heading-0
-#### 1.应用启动流程
+[https://juejin.im/post/6844903959581163528#heading-0](https://juejin.im/post/6844903959581163528#heading-0)
+## 1.应用启动流程
 
 
 **1.Launcher进程请求AMS**
@@ -32,7 +32,7 @@ https://juejin.im/post/6844903959581163528#heading-0
 
 
 
-#### 2.apk组成和Android的打包流程?
+## 2.apk组成和Android的打包流程?
 
 
 
@@ -95,9 +95,9 @@ assets和res/raw
     
      3、资源存取方式不同，assets中利用AssetsManager，而res/raw直接利用getResource()，openRawResource(R.raw.fileName),很多人认为是R.id.filename,其实正确的是R.raw.filename,就像R.drawable.filename一样，整体表示一个ID值，并非是R.id.filename;
 
-#### 3.Android的签名机制，签名如何实现的,v2相比于v1签名机制的改变
+## 3.Android的签名机制，签名如何实现的,v2相比于v1签名机制的改变
 
-https://blog.csdn.net/freekiteyu/article/details/84849651
+[https://blog.csdn.net/freekiteyu/article/details/84849651](https://blog.csdn.net/freekiteyu/article/details/84849651)
 
 
 **签名工具**
@@ -284,7 +284,7 @@ keystore是一个密钥库，也就是说它可以存储多对密钥和证书，
 
 
 
-#### 4.APK的安装流程
+## 4.APK的安装流程
 
 
 复制APK到/data/app目录下，解压并扫描安装包。
