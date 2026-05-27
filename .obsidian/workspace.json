@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Android_Notes/2.Service/Service.md",
+                "file": "Android_Notes/29.Java/多线程/多线程.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Service"
+              "title": "多线程"
             }
           }
         ]
@@ -192,8 +192,9 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "912c55f49475cf21",
+  "active": "7043acc31e9df9b1",
   "lastOpenFiles": [
+    "Android_Notes/2.Service/Service.md",
     "Android_Notes/29.Java/img/jvm6.png",
     "Android_Notes/29.Java/img/jvm7.jpg",
     "Android_Notes/29.Java/img/jvm5.png",
@@ -218,7 +219,6 @@
     "Android_Notes/img/ams3.jpg",
     "Android_Notes/img/wwm1.png",
     "Android_Notes/img/image.png",
-    "Android_Notes/img/ams2.jpg",
     "Android_Notes/img",
     "Android_Notes/10.WebView/WebView.md",
     "Android_Notes/10.WebView",
