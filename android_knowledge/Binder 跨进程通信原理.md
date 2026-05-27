@@ -31,7 +31,7 @@
 
 ### 1. 跨进程通信模型
 
-```
+```java
 ┌─────────────────────────────────────────────────────────────┐
 │                      Binder 通信模型                         │
 ├─────────────────────────────────────────────────────────────┤
@@ -56,7 +56,7 @@
 
 ### 2. 一次拷贝原理
 
-```
+```text
 传统 IPC（2次拷贝）：
 ┌──────────┐    ┌──────────────┐    ┌──────────┐
 │ 用户空间A │ →  │   内核空间   │ →  │ 用户空间B │
@@ -84,7 +84,7 @@ Binder（1次拷贝）：
 
 ### 3. Binder 通信流程
 
-```
+```text
 1. Server 启动，注册服务到 ServiceManager
 2. Client 从 ServiceManager 获取服务的 Binder 代理
 3. Client 通过 Binder 代理发送请求
@@ -107,19 +107,19 @@ interface IMyService {
     // 基本类型
     String getData(int id);
     void setData(int id, String data);
-    
+
     // 自定义对象（需要 Parcelable）
     User getUser(int id);
     void setUser(in User user);
-    
+
     // List
     List<User> getUsers();
-    
+
     // 回调接口
     void registerCallback(IMyCallback callback);
     void unregisterCallback(IMyCallback callback);
 }
-```
+```java
 
 ```aidl
 // IMyCallback.aidl
@@ -128,43 +128,43 @@ package com.example;
 interface IMyCallback {
     void onDataChanged(String data);
 }
-```
+```java
 
 ```java
 // User.java - Parcelable 对象
 public class User implements Parcelable {
     private int id;
     private String name;
-    
+
     protected User(Parcel in) {
         id = in.readInt();
         name = in.readString();
     }
-    
+
     public static final Creator<User> CREATOR = new Creator<User>() {
         @Override
         public User createFromParcel(Parcel in) {
             return new User(in);
         }
-        
+
         @Override
         public User[] newArray(int size) {
             return new User[size];
         }
     };
-    
+
     @Override
     public int describeContents() {
         return 0;
     }
-    
+
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(id);
         dest.writeString(name);
     }
 }
-```
+```java
 
 ### 2. 服务端实现
 
@@ -175,22 +175,22 @@ public class MyService extends Service {
         public String getData(int id) throws RemoteException {
             return "Data " + id;
         }
-        
+
         @Override
         public void setData(int id, String data) throws RemoteException {
             // 处理数据
         }
-        
+
         @Override
         public User getUser(int id) throws RemoteException {
             return new User(id, "User " + id);
         }
-        
+
         @Override
         public void setUser(User user) throws RemoteException {
             // 处理用户
         }
-        
+
         @Override
         public List<User> getUsers() throws RemoteException {
             List<User> users = new ArrayList<>();
@@ -198,36 +198,36 @@ public class MyService extends Service {
             users.add(new User(2, "李四"));
             return users;
         }
-        
+
         private List<IMyCallback> mCallbacks = new ArrayList<>();
-        
+
         @Override
         public void registerCallback(IMyCallback callback) throws RemoteException {
             if (callback != null) {
                 mCallbacks.add(callback);
             }
         }
-        
+
         @Override
         public void unregisterCallback(IMyCallback callback) throws RemoteException {
             if (callback != null) {
                 mCallbacks.remove(callback);
             }
         }
-        
+
         private void notifyDataChanged(String data) {
             for (IMyCallback callback : mCallbacks) {
                 callback.onDataChanged(data);
             }
         }
     };
-    
+
     @Override
     public IBinder onBind(Intent intent) {
         return mBinder;
     }
 }
-```
+```java
 
 ### 3. 客户端调用
 
@@ -235,14 +235,14 @@ public class MyService extends Service {
 public class MainActivity extends Activity {
     private IMyService mService;
     private boolean mBound = false;
-    
+
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             // 将 IBinder 转换为 IMyService
             mService = IMyService.Stub.asInterface(service);
             mBound = true;
-            
+
             // 注册死亡代理
             try {
                 service.linkToDeath(mDeathRecipient, 0);
@@ -250,14 +250,14 @@ public class MainActivity extends Activity {
                 e.printStackTrace();
             }
         }
-        
+
         @Override
         public void onServiceDisconnected(ComponentName name) {
             mService = null;
             mBound = false;
         }
     };
-    
+
     // 死亡代理
     private IBinder.DeathRecipient mDeathRecipient = new IBinder.DeathRecipient() {
         @Override
@@ -270,21 +270,21 @@ public class MainActivity extends Activity {
             bindService();
         }
     };
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        
+
         // 绑定服务
         bindService();
     }
-    
+
     private void bindService() {
         Intent intent = new Intent(this, MyService.class);
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
     }
-    
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -293,17 +293,17 @@ public class MainActivity extends Activity {
             mBound = false;
         }
     }
-    
+
     private void callService() {
         if (mBound) {
             try {
                 // 调用服务方法
                 String data = mService.getData(1);
-                
+
                 User user = mService.getUser(1);
-                
+
                 List<User> users = mService.getUsers();
-                
+
                 // 注册回调
                 IMyCallback.Stub callback = new IMyCallback.Stub() {
                     @Override
@@ -314,7 +314,7 @@ public class MainActivity extends Activity {
                     }
                 };
                 mService.registerCallback(callback);
-                
+
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
@@ -338,7 +338,7 @@ public class MainActivity extends Activity {
         <action android:name="com.example.IMyService" />
     </intent-filter>
 </service>
-```
+```java
 
 ```java
 // 服务端验证权限
@@ -363,19 +363,19 @@ public IBinder onBind(Intent intent) {
 public interface IBinder {
     // 获取本地 Binder 对象
     public IInterface queryLocalInterface(String descriptor);
-    
+
     // 发送事务
     public boolean transact(int code, Parcel data, Parcel reply, int flags)
             throws RemoteException;
-    
+
     // 注册死亡代理
     public void linkToDeath(DeathRecipient recipient, int flags)
             throws RemoteException;
-    
+
     // 注销死亡代理
     public boolean unlinkToDeath(DeathRecipient recipient, int flags);
 }
-```
+```java
 
 ### 2. Binder（服务端）
 ```java
@@ -387,7 +387,7 @@ public class Binder implements IBinder {
         // 子类重写此方法处理请求
         return false;
     }
-    
+
     // 获取本地接口
     public IInterface queryLocalInterface(String descriptor) {
         // 如果在同一进程，返回本地对象
@@ -397,7 +397,7 @@ public class Binder implements IBinder {
         return null;
     }
 }
-```
+```java
 
 ### 3. BinderProxy（客户端）
 ```java
@@ -409,12 +409,12 @@ final class BinderProxy implements IBinder {
         // 通过 Binder 驱动发送
         return transactNative(code, data, reply, flags);
     }
-    
+
     // native 方法
     private native boolean transactNative(int code, Parcel data, Parcel reply, int flags)
             throws RemoteException;
 }
-```
+```java
 
 ### 4. Parcel
 ```java
@@ -426,18 +426,18 @@ public final class Parcel {
     public void writeFloat(float val);
     public void writeDouble(double val);
     public void writeString(String val);
-    
+
     // 写入对象
     public void writeParcelable(Parcelable p, int parcelableFlags);
     public void writeStrongBinder(IBinder val);
-    
+
     // 读取基本类型
     public int readInt();
     public long readLong();
     public float readFloat();
     public double readDouble();
     public String readString();
-    
+
     // 读取对象
     public <T extends Parcelable> T readParcelable(ClassLoader loader);
     public IBinder readStrongBinder();
@@ -450,37 +450,37 @@ public final class Parcel {
 
 ```java
 public interface IMyService extends IInterface {
-    
+
     // Binder 本地对象
     public static abstract class Stub extends Binder implements IMyService {
-        
+
         private static final String DESCRIPTOR = "com.example.IMyService";
-        
+
         public Stub() {
             this.attachInterface(this, DESCRIPTOR);
         }
-        
+
         // 将 IBinder 转换为 IMyService
         public static IMyService asInterface(IBinder obj) {
             if (obj == null) {
                 return null;
             }
-            
+
             // 如果在同一进程，直接返回本地对象
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
             if (iin != null && iin instanceof IMyService) {
                 return (IMyService) iin;
             }
-            
+
             // 否则返回代理
             return new Proxy(obj);
         }
-        
+
         @Override
         public IBinder asBinder() {
             return this;
         }
-        
+
         // 处理客户端请求
         @Override
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags)
@@ -494,7 +494,7 @@ public interface IMyService extends IInterface {
                     reply.writeString(result);
                     return true;
                 }
-                
+
                 case TRANSACTION_getUser: {
                     data.enforceInterface(DESCRIPTOR);
                     int id = data.readInt();
@@ -506,52 +506,52 @@ public interface IMyService extends IInterface {
             }
             return super.onTransact(code, data, reply, flags);
         }
-        
+
         // 客户端代理
         private static class Proxy implements IMyService {
             private IBinder mRemote;
-            
+
             Proxy(IBinder remote) {
                 mRemote = remote;
             }
-            
+
             @Override
             public IBinder asBinder() {
                 return mRemote;
             }
-            
+
             @Override
             public String getData(int id) throws RemoteException {
                 Parcel data = Parcel.obtain();
                 Parcel reply = Parcel.obtain();
-                
+
                 try {
                     data.writeInterfaceToken(DESCRIPTOR);
                     data.writeInt(id);
-                    
+
                     // 发送请求到服务端
                     mRemote.transact(TRANSACTION_getData, data, reply, 0);
                     reply.readException();
-                    
+
                     return reply.readString();
                 } finally {
                     data.recycle();
                     reply.recycle();
                 }
             }
-            
+
             @Override
             public User getUser(int id) throws RemoteException {
                 Parcel data = Parcel.obtain();
                 Parcel reply = Parcel.obtain();
-                
+
                 try {
                     data.writeInterfaceToken(DESCRIPTOR);
                     data.writeInt(id);
-                    
+
                     mRemote.transact(TRANSACTION_getUser, data, reply, 0);
                     reply.readException();
-                    
+
                     return reply.readParcelable(getClass().getClassLoader());
                 } finally {
                     data.recycle();
@@ -560,7 +560,7 @@ public interface IMyService extends IInterface {
             }
         }
     }
-    
+
     // 接口方法
     public String getData(int id) throws RemoteException;
     public User getUser(int id) throws RemoteException;
@@ -581,12 +581,12 @@ ProcessState::self()->setThreadPoolMaxThreadCount(15);
 
 ### 2. 线程池工作流程
 
-```
+```text
 1. 主线程调用 startThreadPool() 启动线程池
 2. 线程池创建新线程等待请求
 3. 收到请求后，分配空闲线程处理
 4. 处理完成后，线程返回线程池
-```
+```java
 
 ### 3. 同步与异步调用
 
@@ -618,7 +618,7 @@ IWindowManager wm = IWindowManager.Stub.asInterface(b);
 // PackageManagerService
 IBinder b = ServiceManager.getService("package");
 IPackageManager pm = IPackageManager.Stub.asInterface(b);
-```
+```java
 
 ### 2. 四大组件通信
 
@@ -645,7 +645,7 @@ IPackageManager pm = IPackageManager.Stub.asInterface(b);
 // 2. 通过 Binder 调用 AMS.broadcastIntent
 // 3. AMS 查找匹配的 Receiver
 // 4. 通过 Binder 回调 Receiver.onReceive
-```
+```java
 
 ### 3. 应用层
 
@@ -655,7 +655,7 @@ public class MyService extends Service {
     private final IMyService.Stub mBinder = new IMyService.Stub() {
         // 实现接口方法
     };
-    
+
     @Override
     public IBinder onBind(Intent intent) {
         return mBinder;
@@ -698,7 +698,7 @@ public class MyProvider extends ContentProvider {
 ### Q5: oneway 关键字？
 ```aidl
 oneway void sendData(int data);
-```
+```java
 - 异步调用，不等待返回
 - 适用于不需要返回值的场景
 - 提高性能
@@ -734,7 +734,7 @@ binder.linkToDeath(recipient, 0);
 // 定义清晰的接口
 // 使用 Parcelable 传输对象
 // 处理 RemoteException
-```
+```java
 
 ### 2. 处理 RemoteException
 ```java
@@ -744,13 +744,13 @@ try {
     // 跨进程调用可能失败
     e.printStackTrace();
 }
-```
+```java
 
 ### 3. 避免传输大数据
 ```java
 // Binder 事务缓冲区约 1MB
 // 传输大数据使用 ContentProvider 或文件
-```
+```java
 
 ### 4. 使用 oneway
 ```aidl
@@ -762,7 +762,7 @@ oneway void sendData(int data);
 ```java
 // 服务端可能被多线程调用
 // 使用 synchronized 或 ConcurrentHashMap
-```
+```java
 
 ### 6. 使用 Messenger（简单场景）
 ```java
@@ -774,13 +774,13 @@ public class MyService extends Service {
             // 处理消息
         }
     });
-    
+
     @Override
     public IBinder onBind(Intent intent) {
         return mMessenger.getBinder();
     }
 }
-```
+```java
 
 ---
 
@@ -798,7 +798,7 @@ public abstract class ContentProvider {
         };
     }
 }
-```
+```java
 
 ### 2. ContentProvider 的使用
 

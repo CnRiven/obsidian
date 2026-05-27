@@ -79,7 +79,7 @@ GlobalScope.launch {
     val data = fetchData() // 挂起等待
     println(data)
 }
-```
+```kotlin
 
 ### 3. 原理分析
 
@@ -93,9 +93,9 @@ suspend fun fetchData(): String {
 // 转换后（简化）
 fun fetchData(continuation: Continuation<String>): Any? {
     // Continuation 保存了协程的状态
-    
+
     val label = (continuation as? FetchDataContinuationImpl)?.label ?: 0
-    
+
     when (label) {
         0 -> {
             // 第一次调用
@@ -110,7 +110,7 @@ fun fetchData(continuation: Continuation<String>): Any? {
             return "Data"
         }
     }
-    
+
     return "Data"
 }
 ```
@@ -156,7 +156,7 @@ Dispatchers.Default {
 Dispatchers.Unconfined {
     // 不限制线程，在当前线程启动
 }
-```
+```kotlin
 
 ### 3. 切换线程
 
@@ -201,7 +201,7 @@ job.join()
 
 // 取消并等待
 job.cancelAndJoin()
-```
+```kotlin
 
 ### 2. async
 
@@ -239,7 +239,7 @@ fun main() = runBlocking {
     }
     println("Hello")
 }
-```
+```kotlin
 
 ### 4. withContext
 
@@ -252,7 +252,7 @@ suspend fun fetchData(): String {
     }
     // 返回主线程
 }
-```
+```kotlin
 
 ---
 
@@ -271,7 +271,7 @@ viewModelScope.launch {
         showError(e.message)
     }
 }
-```
+```kotlin
 
 ### 2. CoroutineExceptionHandler
 
@@ -283,7 +283,7 @@ val handler = CoroutineExceptionHandler { _, exception ->
 GlobalScope.launch(handler) {
     throw RuntimeException("Error")
 }
-```
+```kotlin
 
 ### 3. SupervisorJob
 
@@ -300,7 +300,7 @@ scope.launch {
     // 子协程 2，不受影响
     println("Still running")
 }
-```
+```kotlin
 
 ### 4. supervisorScope
 
@@ -310,14 +310,14 @@ viewModelScope.launch {
         val job1 = launch {
             throw RuntimeException("Error")
         }
-        
+
         val job2 = launch {
             // 不受影响
             println("Still running")
         }
     }
 }
-```
+```kotlin
 
 ---
 
@@ -337,7 +337,7 @@ delay(1300)
 println("main: I'm tired of waiting!")
 job.cancelAndJoin() // 取消并等待
 println("main: Now I can quit.")
-```
+```kotlin
 
 ### 2. 协作取消
 
@@ -368,7 +368,7 @@ val job = GlobalScope.launch {
         delay(500)
     }
 }
-```
+```kotlin
 
 ### 3. 使用 try-finally 释放资源
 
@@ -384,7 +384,7 @@ val job = GlobalScope.launch {
         // 释放资源
     }
 }
-```
+```kotlin
 
 ### 4. 不可取消的代码块
 
@@ -484,7 +484,7 @@ flow.onCompletion { cause ->
 .collect { value ->
     println(value)
 }
-```
+```kotlin
 
 ### 5. StateFlow 和 SharedFlow
 
@@ -516,7 +516,7 @@ lifecycleScope.launch {
         handleEvent(event)
     }
 }
-```
+```kotlin
 
 ### 6. StateFlow vs LiveData
 
@@ -545,7 +545,7 @@ class MyViewModel : ViewModel() {
         }
     }
 }
-```
+```kotlin
 
 ### 2. 使用 lifecycleScope
 
@@ -553,7 +553,7 @@ class MyViewModel : ViewModel() {
 class MyActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.state.collect { state ->
@@ -563,7 +563,7 @@ class MyActivity : AppCompatActivity() {
         }
     }
 }
-```
+```kotlin
 
 ### 3. 异常处理
 
@@ -578,7 +578,7 @@ viewModelScope.launch {
         _uiState.value = Error(e.message)
     }
 }
-```
+```kotlin
 
 ### 4. 并发请求
 
@@ -586,20 +586,20 @@ viewModelScope.launch {
 viewModelScope.launch {
     val userDeferred = async { repository.getUser() }
     val postsDeferred = async { repository.getPosts() }
-    
+
     val user = userDeferred.await()
     val posts = postsDeferred.await()
-    
+
     _uiState.value = Success(user, posts)
 }
-```
+```kotlin
 
 ### 5. 取消协程
 
 ```kotlin
 class MyViewModel : ViewModel() {
     private var job: Job? = null
-    
+
     fun loadData() {
         job?.cancel()
         job = viewModelScope.launch {
@@ -609,7 +609,7 @@ class MyViewModel : ViewModel() {
             _uiState.value = data
         }
     }
-    
+
     override fun onCleared() {
         super.onCleared()
         job?.cancel()
@@ -678,7 +678,7 @@ class MyViewModel : ViewModel() {
 viewModelScope.launch {
     // 任务
 }
-```
+```kotlin
 
 ### 2. 使用 withContext 切换线程
 ```kotlin
@@ -688,20 +688,20 @@ suspend fun fetchData(): Data {
         repository.getData()
     }
 }
-```
+```kotlin
 
 ### 3. 使用 SupervisorJob
 ```kotlin
 // 子协程失败不影响其他
 val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
-```
+```kotlin
 
 ### 4. 使用 StateFlow 替代 LiveData
 ```kotlin
 // 更强大的操作符
 private val _state = MutableStateFlow(initialState)
 val state: StateFlow<State> = _state.asStateFlow()
-```
+```kotlin
 
 ### 5. 处理异常
 ```kotlin
@@ -713,7 +713,7 @@ viewModelScope.launch {
         // 处理异常
     }
 }
-```
+```kotlin
 
 ### 6. 避免 GlobalScope
 ```kotlin

@@ -6,7 +6,7 @@
 
 ## 一、核心组件
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │                      Handler 机制                            │
 ├─────────────────────────────────────────────────────────────┤
@@ -80,23 +80,23 @@ public static void loop() {
     if (me == null) {
         throw new RuntimeException("No Looper; Looper.prepare() wasn't called on this thread.");
     }
-    
+
     final MessageQueue queue = me.mQueue;
-    
+
     // 死循环，不断取消息
     for (;;) {
         // 1. 取消息（可能会阻塞）
         Message msg = queue.next();
-        
+
         if (msg == null) {
             // 没有消息，退出循环
             return;
         }
-        
+
         // 2. 分发消息给 Handler
         final long dispatchStart = SystemClock.uptimeMillis();
         msg.target.dispatchMessage(msg); // msg.target 就是发送消息的 Handler
-        
+
         // 3. 回收消息到对象池
         msg.recycleUnchecked();
     }
@@ -104,7 +104,7 @@ public static void loop() {
 
 public void dispatchMessage(Message msg) {
     // 优先级：Message.callback > Handler.mCallback > Handler.handleMessage
-    
+
     // 1. Message 的 callback（post 方式）
     if (msg.callback != null) {
         handleCallback(msg);
@@ -151,11 +151,11 @@ public boolean sendMessageAtTime(Message msg, long uptimeMillis) {
 
 private boolean enqueueMessage(MessageQueue queue, Message msg, long uptimeMillis) {
     msg.target = this; // 设置消息的 target 为当前 Handler
-    
+
     if (mAsynchronous) {
         msg.setAsynchronous(true); // 设置异步消息
     }
-    
+
     return queue.enqueueMessage(msg, uptimeMillis);
 }
 
@@ -169,7 +169,7 @@ private static Message getPostMessage(Runnable r) {
     m.callback = r; // Runnable 作为 callback
     return m;
 }
-```
+```java
 
 ### 4. MessageQueue 入队
 
@@ -179,13 +179,13 @@ boolean enqueueMessage(Message msg, long when) {
     if (msg.target == null) {
         throw new IllegalArgumentException("Message must have a target.");
     }
-    
+
     synchronized (this) {
         msg.when = when;
-        
+
         Message prev = null;
         Message p = mMessages; // 链表头
-        
+
         // 按时间排序插入
         if (when == 0 || when < p.when) {
             // 插入队头
@@ -206,22 +206,22 @@ boolean enqueueMessage(Message msg, long when) {
     }
     return true;
 }
-```
+```java
 
 ### 5. MessageQueue.next()
 
 ```java
 Message next() {
     int nextPollTimeoutMillis = 0;
-    
+
     for (;;) {
         // 1. 阻塞等待消息
         nativePollOnce(ptr, nextPollTimeoutMillis);
-        
+
         synchronized (this) {
             final long now = SystemClock.uptimeMillis();
             Message msg = mMessages;
-            
+
             // 2. 如果队头是同步屏障
             if (msg != null && msg.target == null) {
                 // 跳过同步消息，找到异步消息
@@ -229,7 +229,7 @@ Message next() {
                     msg = msg.next;
                 } while (msg != null && !msg.isAsynchronous());
             }
-            
+
             if (msg != null) {
                 if (now < msg.when) {
                     // 3. 还没到执行时间，计算等待时间
@@ -244,12 +244,12 @@ Message next() {
                 // 5. 没有消息，无限等待
                 nextPollTimeoutMillis = -1;
             }
-            
+
             // 6. 处理 IdleHandler
             if (pendingIdleHandlerCount < 0 && (mMessages == null || now < mMessages.when)) {
                 pendingIdleHandlerCount = mIdleHandlers.size();
             }
-            
+
             if (pendingIdleHandlerCount > 0) {
                 IdleHandler[] handlers = mIdleHandlers.toArray(mIdleHandlers.size());
                 for (int i = 0; i < pendingIdleHandlerCount; i++) {
@@ -278,7 +278,7 @@ Message next() {
 
 ### 2. 工作原理
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │                    epoll 工作原理                            │
 ├─────────────────────────────────────────────────────────────┤
@@ -315,7 +315,7 @@ Message next() {
 │  │    └─────────┘  └─────────┘  └─────────┘        │    │
 │  └─────────────────────────────────────────────────────┘    │
 └─────────────────────────────────────────────────────────────┘
-```
+```java
 
 ### 3. MessageQueue 中的 epoll
 
@@ -352,13 +352,13 @@ public int postSyncBarrier() {
 private int postSyncBarrier(long when) {
     synchronized (this) {
         final int token = mNextBarrierToken++;
-        
+
         // 创建同步屏障消息（target 为 null）
         final Message msg = Message.obtain();
         msg.markInUse();
         msg.when = when;
         msg.arg1 = token;
-        
+
         // 插入队列（按时间排序）
         Message prev = null;
         Message p = mMessages;
@@ -375,7 +375,7 @@ private int postSyncBarrier(long when) {
             msg.next = p;
             mMessages = msg;
         }
-        
+
         return token;
     }
 }
@@ -409,10 +409,10 @@ public void removeSyncBarrier(int token) {
 void scheduleTraversals() {
     if (!mTraversalScheduled) {
         mTraversalScheduled = true;
-        
+
         // 1. 发送同步屏障
         mTraversalBarrier = mHandler.getLooper().getQueue().postSyncBarrier();
-        
+
         // 2. 发送异步消息（Choreographer）
         mChoreographer.postCallback(
             Choreographer.CALLBACK_TRAVERSAL,
@@ -428,7 +428,7 @@ void scheduleTraversals() {
 
 ### 4. 同步屏障的作用
 
-```
+```text
 消息队列：
 [同步消息 A] → [同步消息 B] → [同步屏障] → [同步消息 C] → [异步消息 D]
 
@@ -462,7 +462,7 @@ Looper.myQueue().addIdleHandler(new MessageQueue.IdleHandler() {
         return false;
     }
 });
-```
+```java
 
 ### 3. 应用场景
 
@@ -515,33 +515,33 @@ handler.sendEmptyMessage(1);
 
 // 退出
 handlerThread.quitSafely();
-```
+```java
 
 ### 3. 原理分析
 
 ```java
 public class HandlerThread extends Thread {
     Looper mLooper;
-    
+
     @Override
     public void run() {
         // 创建 Looper
         Looper.prepare();
-        
+
         synchronized (this) {
             mLooper = Looper.myLooper();
             notifyAll(); // 通知等待的线程
         }
-        
+
         // 开始消息循环
         Looper.loop();
     }
-    
+
     public Looper getLooper() {
         if (!isAlive()) {
             return null;
         }
-        
+
         // 等待 Looper 创建完成
         synchronized (this) {
             while (isAlive() && mLooper == null) {
@@ -554,7 +554,7 @@ public class HandlerThread extends Thread {
         return mLooper;
     }
 }
-```
+```java
 
 ---
 
@@ -572,7 +572,7 @@ public class MyIntentService extends IntentService {
     public MyIntentService() {
         super("MyIntentService");
     }
-    
+
     @Override
     protected void onHandleIntent(Intent intent) {
         // 在后台线程处理任务
@@ -580,7 +580,7 @@ public class MyIntentService extends IntentService {
         // 处理数据
     }
 }
-```
+```java
 
 ### 3. 原理分析
 
@@ -588,34 +588,34 @@ public class MyIntentService extends IntentService {
 public abstract class IntentService extends Service {
     private Looper mServiceLooper;
     private ServiceHandler mServiceHandler;
-    
+
     private final class ServiceHandler extends Handler {
         public ServiceHandler(Looper looper) {
             super(looper);
         }
-        
+
         @Override
         public void handleMessage(Message msg) {
             // 处理任务
             onHandleIntent((Intent) msg.obj);
-            
+
             // 任务完成，停止服务
             stopSelf(msg.arg1);
         }
     }
-    
+
     @Override
     public void onCreate() {
         super.onCreate();
-        
+
         // 创建 HandlerThread
         HandlerThread thread = new HandlerThread("IntentService[" + mName + "]");
         thread.start();
-        
+
         mServiceLooper = thread.getLooper();
         mServiceHandler = new ServiceHandler(mServiceLooper);
     }
-    
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         // 发送消息到 HandlerThread
@@ -623,11 +623,11 @@ public abstract class IntentService extends Service {
         msg.arg1 = startId;
         msg.obj = intent;
         mServiceHandler.sendMessage(msg);
-        
+
         return START_REDELIVER_INTENT;
     }
 }
-```
+```java
 
 ### 4. HandlerThread vs IntentService
 
@@ -653,19 +653,19 @@ public class MainActivity extends Activity {
             // 处理消息
         }
     };
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mHandler.sendMessageDelayed(Message.obtain(), 60000);
     }
 }
-```
+```java
 
 **泄漏链路：**
-```
+```java
 主线程 → Looper → MessageQueue → Message → Handler → Activity
-```
+```java
 
 - Message 持有 Handler 的引用（target 字段）
 - 非静态内部类 Handler 持有 Activity 的引用
@@ -680,11 +680,11 @@ public class MainActivity extends Activity {
 public class MainActivity extends Activity {
     private static class MyHandler extends Handler {
         private WeakReference<MainActivity> mActivity;
-        
+
         public MyHandler(MainActivity activity) {
             mActivity = new WeakReference<>(activity);
         }
-        
+
         @Override
         public void handleMessage(Message msg) {
             MainActivity activity = mActivity.get();
@@ -693,10 +693,10 @@ public class MainActivity extends Activity {
             }
         }
     }
-    
+
     private MyHandler mHandler = new MyHandler(this);
 }
-```
+```java
 
 #### 方案二：onDestroy 中移除消息
 
@@ -706,18 +706,18 @@ protected void onDestroy() {
     super.onDestroy();
     mHandler.removeCallbacksAndMessages(null); // 移除所有消息和回调
 }
-```
+```java
 
 #### 方案三：使用 Lifecycle 感知
 
 ```java
 public class MainActivity extends AppCompatActivity {
     private Handler mHandler = new Handler(Looper.getMainLooper());
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
+
         getLifecycle().addObserver(new LifecycleEventObserver() {
             @Override
             public void onStateChanged(LifecycleOwner source, Lifecycle.Event event) {
@@ -728,7 +728,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 }
-```
+```java
 
 #### 方案四：使用 WeakHandler（不推荐）
 
@@ -750,7 +750,7 @@ class H extends Handler {
     public static final int PAUSE_ACTIVITY = 101;
     public static final int STOP_ACTIVITY = 102;
     public static final int DESTROY_ACTIVITY = 103;
-    
+
     @Override
     public void handleMessage(Message msg) {
         switch (msg.what) {
@@ -764,7 +764,7 @@ class H extends Handler {
         }
     }
 }
-```
+```java
 
 ### 2. ViewRootImpl.ViewRootHandler
 
@@ -784,7 +784,7 @@ final class ViewRootHandler extends Handler {
         }
     }
 }
-```
+```java
 
 ### 3. WindowManagerService
 
@@ -794,7 +794,7 @@ final class H extends Handler {
     public static final int ADD_WINDOW = 1;
     public static final int REMOVE_WINDOW = 2;
     public static final int RELAYOUT_WINDOW = 3;
-    
+
     @Override
     public void handleMessage(Message msg) {
         switch (msg.what) {
@@ -846,7 +846,7 @@ Looper.myQueue().addIdleHandler(() -> {
     // 空闲时执行
     return false; // 返回 false 表示只执行一次
 });
-```
+```java
 
 ### Q6: 同步屏障是什么？
 - 一种特殊的消息（target 为 null）
@@ -886,7 +886,7 @@ lifecycleScope.launch {
         // 耗时操作
     }
 }
-```
+```java
 
 ### 2. 及时移除消息
 ```java
@@ -895,17 +895,17 @@ protected void onDestroy() {
     super.onDestroy();
     handler.removeCallbacksAndMessages(null);
 }
-```
+```java
 
 ### 3. 使用静态内部类
 ```java
 private static class MyHandler extends Handler {
     private WeakReference<Activity> activity;
-    
+
     public MyHandler(Activity activity) {
         this.activity = new WeakReference<>(activity);
     }
-    
+
     @Override
     public void handleMessage(Message msg) {
         Activity a = activity.get();
@@ -914,7 +914,7 @@ private static class MyHandler extends Handler {
         }
     }
 }
-```
+```java
 
 ### 4. 合理使用 postDelayed
 ```java
@@ -925,7 +925,7 @@ handler.postDelayed(() -> {
 
 // 及时移除
 handler.removeCallbacks(runnable);
-```
+```java
 
 ### 5. 线程间通信
 ```java

@@ -13,7 +13,7 @@
 
 ### 2. 底层原理 - 内存屏障
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │                    CPU 缓存一致性协议                         │
 ├─────────────────────────────────────────────────────────────┤
@@ -64,7 +64,7 @@
 ├─────────────────────────────────┤
 │         LoadStore 屏障          │  ← 保证 volatile 读先于后续写
 └─────────────────────────────────┘
-```
+```java
 
 ### 3. 可见性原理
 
@@ -95,7 +95,7 @@ public void reader() {
 // 双重检查锁定（DCL）单例
 public class Singleton {
     private volatile static Singleton instance;
-    
+
     public static Singleton getInstance() {
         if (instance == null) {              // 第一次检查
             synchronized (Singleton.class) {
@@ -123,7 +123,7 @@ public class Singleton {
 // 2. 初始化对象
 
 // 线程 2 可能看到一个未初始化完成的对象
-```
+```java
 
 ### 5. 不保证原子性
 
@@ -140,7 +140,7 @@ public void increment() {
 // 线程 1：count = 0 + 1 = 1，写入
 // 线程 2：count = 0 + 1 = 1，写入
 // 结果：count = 1（期望是 2）
-```
+```java
 
 **解决方案：**
 
@@ -218,7 +218,7 @@ synchronized (MyClass.class) {
 
 ### 3. 底层原理 - 对象头 Mark Word
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │                    对象头 Mark Word                          │
 ├─────────────────────────────────────────────────────────────┤
@@ -251,7 +251,7 @@ synchronized (MyClass.class) {
 
 ### 4. 锁升级过程
 
-```
+```text
 无锁 → 偏向锁 → 轻量级锁 → 重量级锁
   ↓       ↓         ↓         ↓
  可逆    可逆      不可逆     不可逆
@@ -318,7 +318,7 @@ synchronized (MyClass.class) {
 // - 根据上次自旋结果调整自旋次数
 // - 上次成功，增加自旋次数
 // - 上次失败，减少自旋次数
-```
+```java
 
 #### 锁消除
 ```java
@@ -330,7 +330,7 @@ public String concatString(String s1, String s2) {
     return sb.toString();
     // JIT 会消除 StringBuffer 的同步锁
 }
-```
+```java
 
 #### 锁粗化
 ```java
@@ -379,7 +379,7 @@ public final native boolean compareAndSwapInt(Object o, long offset, int expecte
 // 线程 2：将 B 改回 A
 // 线程 1：CAS 检查，值还是 A，认为没变化，更新成功
 // 实际上值已经被修改过了！
-```
+```java
 
 ### 4. ABA 问题解决方案
 
@@ -415,7 +415,7 @@ AtomicLong longValue = new AtomicLong(0);
 
 // AtomicBoolean
 AtomicBoolean flag = new AtomicBoolean(false);
-```
+```java
 
 ### 2. 引用类型原子类
 
@@ -431,7 +431,7 @@ ref.compareAndSet("A", "B", stamp, stamp + 1);
 
 // AtomicMarkableReference（带布尔标记）
 AtomicMarkableReference<String> ref = new AtomicMarkableReference<>("A", false);
-```
+```java
 
 ### 3. 数组原子类
 
@@ -443,7 +443,7 @@ atomicArr.incrementAndGet(0); // arr[0]++
 
 // AtomicLongArray
 // AtomicReferenceArray
-```
+```java
 
 ### 4. 字段更新器
 
@@ -458,7 +458,7 @@ AtomicIntegerFieldUpdater<User> updater =
 User user = new User();
 updater.set(user, 25);
 updater.compareAndSet(user, 25, 26);
-```
+```java
 
 ### 5. 原子累加器（Java 8+）
 
@@ -501,7 +501,7 @@ public ThreadPoolExecutor(
 
 ### 3. 执行流程
 
-```
+```text
 提交任务
     ↓
 当前线程数 < corePoolSize？
@@ -517,7 +517,7 @@ public ThreadPoolExecutor(
     └→ 创建非核心线程执行
     ↓否
 执行拒绝策略
-```
+```java
 
 ### 4. 四种拒绝策略
 
@@ -537,7 +537,7 @@ new ThreadPoolExecutor.DiscardPolicy();
 // 4. DiscardOldestPolicy
 // 丢弃队列中最早的任务，重新提交当前任务
 new ThreadPoolExecutor.DiscardOldestPolicy();
-```
+```java
 
 ### 5. 常用线程池
 
@@ -561,7 +561,7 @@ ExecutorService pool = Executors.newSingleThreadExecutor();
 // 支持定时和周期性任务
 ScheduledExecutorService pool = Executors.newScheduledThreadPool(5);
 // 问题：DelayedWorkQueue 无界，可能 OOM
-```
+```java
 
 ### 6. 线程池状态
 
@@ -588,12 +588,12 @@ private static final int CAPACITY   = (1 << COUNT_BITS) - 1;
 
 ### 7. 线程池状态转换
 
-```
+```text
 RUNNING → SHUTDOWN（调用 shutdown()）
 SHUTDOWN → STOP（调用 shutdownNow()）
 STOP → TIDYING（队列为空，线程数为 0）
 TIDYING → TERMINATED（terminated() 执行完）
-```
+```java
 
 ### 8. 合理配置线程池
 
@@ -633,7 +633,7 @@ for (int i = 0; i < 3; i++) {
 
 latch.await(); // 等待计数器为 0
 System.out.println("所有任务完成");
-```
+```java
 
 ### 2. CyclicBarrier（循环栅栏）
 
@@ -654,7 +654,7 @@ for (int i = 0; i < 3; i++) {
         }
     }).start();
 }
-```
+```java
 
 ### 3. Semaphore（信号量）
 
@@ -707,24 +707,24 @@ User user = userHolder.get();
 
 // 移除值（防止内存泄漏）
 userHolder.remove();
-```
+```java
 
 ### 3. 底层原理
 
 ```java
 // ThreadLocalMap
 public class ThreadLocal<T> {
-    
+
     // 每个线程都有一个 ThreadLocalMap
     static class ThreadLocalMap {
         // Entry 继承 WeakReference<ThreadLocal<?>>
         static class Entry extends WeakReference<ThreadLocal<?>> {
             Object value;
         }
-        
+
         private Entry[] table;
     }
-    
+
     public void set(T value) {
         Thread t = Thread.currentThread();
         ThreadLocalMap map = t.threadLocals;
@@ -734,7 +734,7 @@ public class ThreadLocal<T> {
             createMap(t, value);
         }
     }
-    
+
     public T get() {
         Thread t = Thread.currentThread();
         ThreadLocalMap map = t.threadLocals;
@@ -751,7 +751,7 @@ public class ThreadLocal<T> {
 
 ### 4. 内存泄漏问题
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │                    ThreadLocal 内存泄漏                      │
 ├─────────────────────────────────────────────────────────────┤
@@ -782,7 +782,7 @@ public class ThreadLocal<T> {
 │  - Value 是强引用，不会被 GC 回收                               │
 │  - Key 被回收后，Value 无法访问，造成内存泄漏                      │
 └─────────────────────────────────────────────────────────────┘
-```
+```java
 
 ### 5. 解决方案
 
@@ -910,7 +910,7 @@ ThreadPoolExecutor executor = new ThreadPoolExecutor(
     },
     new ThreadPoolExecutor.CallerRunsPolicy() // 拒绝策略
 );
-```
+```java
 
 ### 4. ThreadLocal 使用
 ```java

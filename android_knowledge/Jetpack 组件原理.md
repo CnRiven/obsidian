@@ -32,19 +32,19 @@ public enum Event {
 public enum State {
     DESTROYED, INITIALIZED, CREATED, STARTED, RESUMED
 }
-```
+```java
 
 ### 3. 使用方式
 
 ```java
 // 方式一：注解
 public class MyObserver implements LifecycleObserver {
-    
+
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     public void onCreate() {
         // Activity onCreate
     }
-    
+
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     public void onDestroy() {
         // Activity onDestroy
@@ -53,12 +53,12 @@ public class MyObserver implements LifecycleObserver {
 
 // 方式二：DefaultLifecycleObserver（推荐）
 public class MyObserver implements DefaultLifecycleObserver {
-    
+
     @Override
     public void onCreate(LifecycleOwner owner) {
         // Activity onCreate
     }
-    
+
     @Override
     public void onDestroy(LifecycleOwner owner) {
         // Activity onDestroy
@@ -67,7 +67,7 @@ public class MyObserver implements DefaultLifecycleObserver {
 
 // 方式三：LifecycleEventObserver
 public class MyObserver implements LifecycleEventObserver {
-    
+
     @Override
     public void onStateChanged(LifecycleOwner source, Lifecycle.Event event) {
         switch (event) {
@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
         getLifecycle().addObserver(new MyObserver());
     }
 }
-```
+```java
 
 ### 4. 原理分析
 
@@ -97,16 +97,16 @@ public class MainActivity extends AppCompatActivity {
 // ComponentActivity.java
 public class ComponentActivity extends Activity implements LifecycleOwner {
     private LifecycleRegistry mLifecycleRegistry = new LifecycleRegistry(this);
-    
+
     @Override
     public Lifecycle getLifecycle() {
         return mLifecycleRegistry;
     }
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
+
         // 注入 ReportFragment
         ReportFragment.injectIfNeededIn(this);
     }
@@ -114,7 +114,7 @@ public class ComponentActivity extends Activity implements LifecycleOwner {
 
 // ReportFragment.java
 public class ReportFragment extends Fragment {
-    
+
     public static void injectIfNeededIn(Activity activity) {
         // API 29+ 使用 Activity.registerActivityLifecycleCallbacks
         if (Build.VERSION.SDK_INT >= 29) {
@@ -122,7 +122,7 @@ public class ReportFragment extends Fragment {
                 new LifecycleCallbacks()
             );
         }
-        
+
         // 添加 ReportFragment
         android.app.FragmentManager manager = activity.getFragmentManager();
         if (manager.findFragmentByTag(TAG) == null) {
@@ -132,44 +132,44 @@ public class ReportFragment extends Fragment {
             manager.executePendingTransactions();
         }
     }
-    
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         dispatchCreate(activity);
     }
-    
+
     @Override
     public void onStart() {
         dispatchStart(activity);
     }
-    
+
     @Override
     public void onResume() {
         dispatchResume(activity);
     }
-    
+
     @Override
     public void onPause() {
         dispatchPause(activity);
     }
-    
+
     @Override
     public void onStop() {
         dispatchStop(activity);
     }
-    
+
     @Override
     public void onDestroy() {
         dispatchDestroy(activity);
     }
-    
+
     private void dispatchCreate(Activity activity) {
         if (activity instanceof LifecycleRegistryOwner) {
             ((LifecycleRegistryOwner) activity).getLifecycle()
                 .handleLifecycleEvent(Lifecycle.Event.ON_CREATE);
         }
     }
-    
+
     // ... 其他 dispatch 方法
 }
 
@@ -177,18 +177,18 @@ public class ReportFragment extends Fragment {
 public class LifecycleRegistry extends Lifecycle {
     private State mState;
     private FastSafeIterableMap<LifecycleObserver, ObserverWrapper> mObserverMap;
-    
+
     public void handleLifecycleEvent(Lifecycle.Event event) {
         State next = getStateAfter(event);
         moveToState(next);
     }
-    
+
     private void moveToState(State next) {
         if (mState == next) {
             return;
         }
         mState = next;
-        
+
         // 通知所有观察者
         for (Map.Entry<LifecycleObserver, ObserverWrapper> entry : mObserverMap) {
             ObserverWrapper observer = entry.getValue();
@@ -219,7 +219,7 @@ public class LifecycleRegistry extends Lifecycle {
 ```java
 public class MyViewModel extends ViewModel {
     private MutableLiveData<List<User>> users;
-    
+
     public LiveData<List<User>> getUsers() {
         if (users == null) {
             users = new MutableLiveData<>();
@@ -227,11 +227,11 @@ public class MyViewModel extends ViewModel {
         }
         return users;
     }
-    
+
     private void loadUsers() {
         // 加载数据
     }
-    
+
     @Override
     protected void onCleared() {
         super.onCleared();
@@ -244,14 +244,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
+
         MyViewModel model = new ViewModelProvider(this).get(MyViewModel.class);
         model.getUsers().observe(this, users -> {
             // 更新 UI
         });
     }
 }
-```
+```java
 
 ### 3. 原理分析
 
@@ -259,18 +259,18 @@ public class MainActivity extends AppCompatActivity {
 // ViewModelStore.java
 public class ViewModelStore {
     private final HashMap<String, ViewModel> mMap = new HashMap<>();
-    
+
     final void put(String key, ViewModel viewModel) {
         ViewModel oldViewModel = mMap.put(key, viewModel);
         if (oldViewModel != null) {
             oldViewModel.onCleared();
         }
     }
-    
+
     final ViewModel get(String key) {
         return mMap.get(key);
     }
-    
+
     public final void clear() {
         for (ViewModel vm : mMap.values()) {
             vm.onCleared();
@@ -287,7 +287,7 @@ public interface ViewModelStoreOwner {
 // ComponentActivity.java
 public class ComponentActivity extends Activity implements ViewModelStoreOwner {
     private ViewModelStore mViewModelStore;
-    
+
     @Override
     public ViewModelStore getViewModelStore() {
         if (mViewModelStore == null) {
@@ -302,13 +302,13 @@ public class ComponentActivity extends Activity implements ViewModelStoreOwner {
         }
         return mViewModelStore;
     }
-    
+
     // 配置更改时保存
     @Override
     public final Object onRetainNonConfigurationInstance() {
         return new NonConfigurationInstances(mViewModelStore);
     }
-    
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -318,7 +318,7 @@ public class ComponentActivity extends Activity implements ViewModelStoreOwner {
         }
     }
 }
-```
+```java
 
 **原理总结：**
 - ViewModelStore 存储 ViewModel 实例
@@ -341,11 +341,11 @@ public class ComponentActivity extends Activity implements ViewModelStoreOwner {
 // 创建 LiveData
 public class UserViewModel extends ViewModel {
     private MutableLiveData<User> userLiveData = new MutableLiveData<>();
-    
+
     public LiveData<User> getUser() {
         return userLiveData;
     }
-    
+
     public void setUser(User user) {
         userLiveData.setValue(user); // 主线程
         // 或
@@ -357,34 +357,34 @@ public class UserViewModel extends ViewModel {
 userViewModel.getUser().observe(this, user -> {
     // 更新 UI
 });
-```
+```java
 
 ### 3. 原理分析
 
 ```java
 public abstract class LiveData<T> {
-    
+
     // 观察者包装
     private SafeIterableMap<Observer<? super T>, ObserverWrapper> mObservers = new SafeIterableMap<>();
-    
+
     // 版本号
     private int mVersion = START_VERSION;
-    
+
     // 添加观察者
     public void observe(@NonNull LifecycleOwner owner, @NonNull Observer<? super T> observer) {
         // 创建生命周期感知的观察者
         LifecycleBoundObserver wrapper = new LifecycleBoundObserver(owner, observer);
-        
+
         ObserverWrapper existing = mObservers.putIfAbsent(observer, wrapper);
-        
+
         // 注册生命周期观察者
         owner.getLifecycle().addObserver(wrapper);
     }
-    
+
     // 生命周期感知的观察者
     class LifecycleBoundObserver extends ObserverWrapper implements LifecycleEventObserver {
         final LifecycleOwner mOwner;
-        
+
         @Override
         public void onStateChanged(LifecycleOwner source, Lifecycle.Event event) {
             if (mOwner.getLifecycle().getCurrentState() == DESTROYED) {
@@ -393,13 +393,13 @@ public abstract class LiveData<T> {
             }
             activeStateChanged(shouldBeActive());
         }
-        
+
         @Override
         boolean shouldBeActive() {
             return mOwner.getLifecycle().getCurrentState().isAtLeast(STARTED);
         }
     }
-    
+
     // 设置值
     protected void setValue(T value) {
         assertMainThread("setValue");
@@ -407,34 +407,34 @@ public abstract class LiveData<T> {
         mData = value;
         dispatchingValue(null);
     }
-    
+
     // 分发值
     void dispatchingValue(@Nullable ObserverWrapper initiator) {
         for (Iterator<Map.Entry<Observer<? super T>, ObserverWrapper>> iterator = 
              mObservers.iteratorWithAdditions(); iterator.hasNext(); ) {
-            
+
             ObserverWrapper wrapper = iterator.next().getValue();
             if (wrapper.mActive) {
                 considerNotify(wrapper); // 通知观察者
             }
         }
     }
-    
+
     // 通知观察者
     private void considerNotify(ObserverWrapper observer) {
         if (!observer.mActive) {
             return;
         }
-        
+
         if (!observer.shouldBeActive()) {
             observer.activeStateChanged(false);
             return;
         }
-        
+
         if (observer.mLastVersion >= mVersion) {
             return; // 已经通知过
         }
-        
+
         observer.mLastVersion = mVersion;
         observer.mObserver.onChanged(mData); // 回调
     }
@@ -464,13 +464,13 @@ public abstract class LiveData<T> {
 public class User {
     @PrimaryKey(autoGenerate = true)
     public int id;
-    
+
     @ColumnInfo(name = "name")
     public String name;
-    
+
     @ColumnInfo(name = "age")
     public int age;
-    
+
     @Ignore
     public String temp; // 不存储到数据库
 }
@@ -480,22 +480,22 @@ public class User {
 public interface UserDao {
     @Query("SELECT * FROM users")
     LiveData<List<User>> getAllUsers();
-    
+
     @Query("SELECT * FROM users WHERE id = :userId")
     LiveData<User> getUserById(int userId);
-    
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(User user);
-    
+
     @Insert
     void insertAll(List<User> users);
-    
+
     @Update
     void update(User user);
-    
+
     @Delete
     void delete(User user);
-    
+
     @Query("DELETE FROM users")
     void deleteAll();
 }
@@ -504,10 +504,10 @@ public interface UserDao {
 @Database(entities = {User.class}, version = 1, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
     public abstract UserDao userDao();
-    
+
     // 单例模式
     private static volatile AppDatabase INSTANCE;
-    
+
     public static AppDatabase getInstance(Context context) {
         if (INSTANCE == null) {
             synchronized (AppDatabase.class) {
@@ -543,7 +543,7 @@ userDao.insert(new User(1, "张三", 25));
 userDao.getAllUsers().observe(this, users -> {
     // 更新 UI
 });
-```
+```java
 
 ### 3. 数据库迁移
 
@@ -602,7 +602,7 @@ INSTANCE = Room.databaseBuilder(
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nav_graph"
     app:startDestination="@id/homeFragment">
-    
+
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.example.HomeFragment"
@@ -613,7 +613,7 @@ INSTANCE = Room.databaseBuilder(
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left" />
     </fragment>
-    
+
     <fragment
         android:id="@+id/detailFragment"
         android:name="com.example.DetailFragment"
@@ -623,7 +623,7 @@ INSTANCE = Room.databaseBuilder(
             app:argType="integer" />
     </fragment>
 </navigation>
-```
+```xml
 
 ```xml
 <!-- activity_main.xml -->
@@ -634,7 +634,7 @@ INSTANCE = Room.databaseBuilder(
     android:layout_height="match_parent"
     app:defaultNavHost="true"
     app:navGraph="@navigation/nav_graph" />
-```
+```java
 
 ```java
 // 导航
@@ -649,7 +649,7 @@ NavHostFragment.findNavController(this)
 
 // 接收参数
 int userId = getArguments().getInt("userId");
-```
+```java
 
 ### 3. 原理分析
 
@@ -675,12 +675,12 @@ public class UploadWorker extends Worker {
     public UploadWorker(Context context, WorkerParameters params) {
         super(context, params);
     }
-    
+
     @Override
     public Result doWork() {
         // 获取输入数据
         String url = getInputData().getString("url");
-        
+
         // 执行后台任务
         try {
             uploadData(url);
@@ -723,7 +723,7 @@ WorkManager.getInstance(context)
     .then(processWork)
     .then(uploadWork)
     .enqueue();
-```
+```java
 
 ### 3. 原理分析
 
@@ -750,23 +750,23 @@ WorkManager.getInstance(context)
             name="user"
             type="com.example.User" />
     </data>
-    
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{user.name}" />
-        
+
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@={user.name}" />
     </LinearLayout>
 </layout>
-```
+```java
 
 ```java
 // Activity
@@ -819,17 +819,17 @@ user.setName("李四"); // UI 自动更新
 // 使用 AndroidViewModel
 public class MyViewModel extends AndroidViewModel {
     private Application application;
-    
+
     public MyViewModel(Application application) {
         super(application);
         this.application = application;
     }
-    
+
     public void doSomething() {
         Context context = getApplication();
     }
 }
-```
+```java
 
 ---
 
@@ -842,35 +842,35 @@ public class MyObserver implements DefaultLifecycleObserver {
     public void onCreate(LifecycleOwner owner) {
         // 初始化
     }
-    
+
     @Override
     public void onDestroy(LifecycleOwner owner) {
         // 清理资源
     }
 }
-```
+```java
 
 ### 2. 使用 ViewModel 存储 UI 数据
 ```java
 public class UserViewModel extends ViewModel {
     private MutableLiveData<User> user = new MutableLiveData<>();
-    
+
     public LiveData<User> getUser() {
         return user;
     }
-    
+
     public void loadUser(int id) {
         // 加载用户
     }
 }
-```
+```java
 
 ### 3. 使用 LiveData 观察数据变化
 ```java
 viewModel.getUser().observe(this, user -> {
     // 更新 UI
 });
-```
+```java
 
 ### 4. 使用 Room 管理数据库
 ```java
@@ -878,11 +878,11 @@ viewModel.getUser().observe(this, user -> {
 public interface UserDao {
     @Query("SELECT * FROM users")
     LiveData<List<User>> getAllUsers();
-    
+
     @Insert
     void insert(User user);
 }
-```
+```java
 
 ### 5. 使用 WorkManager 执行后台任务
 ```java

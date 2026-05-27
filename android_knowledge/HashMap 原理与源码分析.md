@@ -16,7 +16,7 @@
 - 链表长度 >= 8 且数组长度 >= 64 时，转为红黑树
 - 红黑树节点 <= 6 时，退化为链表
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │                    HashMap 底层结构                          │
 ├─────────────────────────────────────────────────────────────┤
@@ -29,7 +29,7 @@
 │              ↓                                               │
 │             [G]                                              │
 └─────────────────────────────────────────────────────────────┘
-```
+```java
 
 ---
 
@@ -76,7 +76,7 @@ static class Node<K,V> implements Map.Entry<K,V> {
     final K key;       // 键
     V value;           // 值
     Node<K,V> next;    // 下一个节点
-    
+
     Node(int hash, K key, V value, Node<K,V> next) {
         this.hash = hash;
         this.key = key;
@@ -108,26 +108,26 @@ public V put(K key, V value) {
 
 final V putVal(int hash, K key, V value, boolean onlyIfAbsent, boolean evict) {
     Node<K,V>[] tab; Node<K,V> p; int n, i;
-    
+
     // 1. 如果数组为空或长度为 0，先扩容（懒加载）
     if ((tab = table) == null || (n = tab.length) == 0)
         n = (tab = resize()).length;
-    
+
     // 2. 计算索引 (n-1) & hash，如果该位置为空，直接插入新节点
     if ((p = tab[i = (n - 1) & hash]) == null)
         tab[i] = newNode(hash, key, value, null);
     else {
         Node<K,V> e; K k;
-        
+
         // 3. 桶的第一个节点就是要找的 key
         if (p.hash == hash && 
             ((k = p.key) == key || (key != null && key.equals(k))))
             e = p;
-        
+
         // 4. 如果是红黑树节点，走红黑树的插入逻辑
         else if (p instanceof TreeNode)
             e = ((TreeNode<K,V>)p).putTreeVal(this, tab, hash, key, value);
-        
+
         // 5. 链表遍历（尾插法）
         else {
             for (int binCount = 0; ; ++binCount) {
@@ -146,7 +146,7 @@ final V putVal(int hash, K key, V value, boolean onlyIfAbsent, boolean evict) {
                 p = e;
             }
         }
-        
+
         // 6. key 已存在，覆盖旧值
         if (e != null) {
             V oldValue = e.value;
@@ -156,13 +156,13 @@ final V putVal(int hash, K key, V value, boolean onlyIfAbsent, boolean evict) {
             return oldValue;
         }
     }
-    
+
     ++modCount; // 修改计数器（fail-fast 机制）
-    
+
     // 7. 超过阈值，扩容
     if (++size > threshold)
         resize();
-    
+
     afterNodeInsertion(evict); // LinkedHashMap 回调
     return null;
 }
@@ -170,7 +170,7 @@ final V putVal(int hash, K key, V value, boolean onlyIfAbsent, boolean evict) {
 
 ### Put 流程图
 
-```
+```text
 put(key, value)
     ↓
 计算 hash(key)
@@ -196,7 +196,7 @@ tab[i] 是否是红黑树？ ─是→ 红黑树插入
 size > threshold？ ─是→ resize() 扩容
     ↓否
 结束
-```
+```java
 
 ### 2. Hash 计算
 
@@ -223,7 +223,7 @@ static final int hash(Object key) {
 
 // 所以只有低 4 位参与索引计算
 // 高 16 位的信息通过扰动函数混合到低 16 位
-```
+```java
 
 ### 3. Get 流程
 
@@ -235,22 +235,22 @@ public V get(Object key) {
 
 final Node<K,V> getNode(int hash, Object key) {
     Node<K,V>[] tab; Node<K,V> first, e; int n; K k;
-    
+
     // 1. 数组不为空且桶不为空
     if ((tab = table) != null && (n = tab.length) > 0 &&
         (first = tab[(n - 1) & hash]) != null) {
-        
+
         // 2. 检查第一个节点
         if (first.hash == hash && 
             ((k = first.key) == key || (key != null && key.equals(k))))
             return first;
-        
+
         // 3. 有后续节点
         if ((e = first.next) != null) {
             // 4. 如果是红黑树，走红黑树查找
             if (first instanceof TreeNode)
                 return ((TreeNode<K,V>)first).getTreeNode(hash, key);
-            
+
             // 5. 链表遍历查找
             do {
                 if (e.hash == hash &&
@@ -261,7 +261,7 @@ final Node<K,V> getNode(int hash, Object key) {
     }
     return null;
 }
-```
+```java
 
 ### 4. Resize 扩容流程
 
@@ -271,7 +271,7 @@ final Node<K,V>[] resize() {
     int oldCap = (oldTab == null) ? 0 : oldTab.length;
     int oldThr = threshold;
     int newCap, newThr = 0;
-    
+
     if (oldCap > 0) {
         // 已达到最大容量，不再扩容
         if (oldCap >= MAXIMUM_CAPACITY) {
@@ -291,25 +291,25 @@ final Node<K,V>[] resize() {
         newCap = DEFAULT_INITIAL_CAPACITY;
         newThr = (int)(DEFAULT_LOAD_FACTOR * DEFAULT_INITIAL_CAPACITY);
     }
-    
+
     if (newThr == 0) {
         float ft = (float)newCap * loadFactor;
         newThr = (newCap < MAXIMUM_CAPACITY && ft < (float)MAXIMUM_CAPACITY ?
                   (int)ft : Integer.MAX_VALUE);
     }
     threshold = newThr;
-    
+
     // 创建新数组
     Node<K,V>[] newTab = new Node[newCap];
     table = newTab;
-    
+
     // 重新分配节点
     if (oldTab != null) {
         for (int j = 0; j < oldCap; ++j) {
             Node<K,V> e;
             if ((e = oldTab[j]) != null) {
                 oldTab[j] = null; // help GC
-                
+
                 // 单节点，直接放入新位置
                 if (e.next == null)
                     newTab[e.hash & (newCap - 1)] = e;
@@ -338,7 +338,7 @@ final Node<K,V>[] resize() {
                             hiTail = e;
                         }
                     } while ((e = next) != null);
-                    
+
                     // 低位链表放在原位置
                     if (loTail != null) {
                         loTail.next = null;
@@ -359,7 +359,7 @@ final Node<K,V>[] resize() {
 
 ### 扩容时链表拆分原理
 
-```
+```text
 原数组长度 n = 16 (0001 0000)
 新数组长度 n = 32 (0010 0000)
 
@@ -414,16 +414,16 @@ public class LinkedHashMap<K,V> extends HashMap<K,V> {
     // 双向链表的头尾节点
     transient LinkedHashMap.Entry<K,V> head;
     transient LinkedHashMap.Entry<K,V> tail;
-    
+
     // 排序模式：false 插入顺序，true 访问顺序
     final boolean accessOrder;
-    
+
     // Entry 继承 HashMap.Node，增加了 before/after 指针
     static class Entry<K,V> extends HashMap.Node<K,V> {
         Entry<K,V> before, after;
     }
 }
-```
+```java
 
 ### 3. 使用场景
 - LRU 缓存（accessOrder = true）
@@ -434,13 +434,13 @@ public class LinkedHashMap<K,V> extends HashMap<K,V> {
 ```java
 public class LRUCache<K, V> extends LinkedHashMap<K, V> {
     private final int maxSize;
-    
+
     public LRUCache(int maxSize) {
         // accessOrder = true 表示访问顺序
         super(maxSize, 0.75f, true);
         this.maxSize = maxSize;
     }
-    
+
     @Override
     protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {
         return size() > maxSize; // 超过容量时删除最久未使用的
@@ -462,18 +462,18 @@ public class LRUCache<K, V> extends LinkedHashMap<K, V> {
 ```java
 public class HashSet<E> extends AbstractSet<E> {
     private transient HashMap<E,Object> map;
-    
+
     // 所有 value 共用这个对象
     private static final Object PRESENT = new Object();
-    
+
     public HashSet() {
         map = new HashMap<>();
     }
-    
+
     public boolean add(E e) {
         return map.put(e, PRESENT) == null;
     }
-    
+
     public boolean remove(Object o) {
         return map.remove(o) == PRESENT;
     }
@@ -498,7 +498,7 @@ static final class Segment<K,V> extends ReentrantLock {
 
 // 锁的粒度：Segment 级别
 // 不同 Segment 可以并发写入
-```
+```java
 
 ### JDK 1.8 实现（CAS + synchronized）
 
@@ -509,11 +509,11 @@ static final class Segment<K,V> extends ReentrantLock {
 final V putVal(K key, V value, boolean onlyIfAbsent) {
     for (Node<K,V>[] tab = table;;) {
         Node<K,V> f; int n, i, fh;
-        
+
         // 数组为空，初始化
         if (tab == null || (n = tab.length) == 0)
             tab = initTable();
-        
+
         // 桶为空，CAS 插入
         else if ((f = tabAt(tab, i = (n - 1) & hash)) == null) {
             if (casTabAt(tab, i, null, new Node<K,V>(hash, key, value, null)))
@@ -606,7 +606,7 @@ final V putVal(K key, V value, boolean onlyIfAbsent) {
 // 如果只重写 equals，不重写 hashCode
 class User {
     String name;
-    
+
     @Override
     public boolean equals(Object o) {
         return this.name.equals(((User)o).name);
@@ -643,7 +643,7 @@ map.get(u2); // 可能返回 null！
 ```java
 // 多线程环境下，size 可能不准确
 // 应该使用 ConcurrentHashMap.size()
-```
+```java
 
 ### 误区 2：遍历时可以删除元素
 ```java
@@ -665,7 +665,7 @@ while (it.hasNext()) {
 
 // 或者使用 removeIf
 map.entrySet().removeIf(entry -> shouldRemove(entry));
-```
+```java
 
 ### 误区 3：初始容量设置不合理
 ```java
@@ -674,7 +674,7 @@ new HashMap<>(100); // 实际容量 128，阈值 96
 
 // 正确：考虑负载因子
 new HashMap<>(100 / 0.75 + 1); // 容量 134，阈值 100
-```
+```java
 
 ### 误区 4：使用可变对象作为 Key
 ```java
@@ -688,7 +688,7 @@ map.get(list); // 可能返回 null！hashCode 变了
 
 // 正确：使用不可变对象作为 Key
 // String、Integer 等包装类
-```
+```java
 
 ---
 
@@ -699,14 +699,14 @@ map.get(list); // 可能返回 null！hashCode 变了
 // 预计存储 100 个元素
 int capacity = (int) (100 / 0.75) + 1;
 Map<String, String> map = new HashMap<>(capacity);
-```
+```java
 
 ### 2. 不可变对象作为 Key
 ```java
 // String、Integer、Long 等不可变类作为 Key
 Map<String, Object> map = new HashMap<>();
 map.put("key", "value");
-```
+```java
 
 ### 3. 线程安全场景
 ```java
@@ -718,7 +718,7 @@ Map<String, String> map = Collections.synchronizedMap(new HashMap<>());
 
 // 方案三：Hashtable（不推荐，性能差）
 Hashtable<String, String> map = new Hashtable<>();
-```
+```java
 
 ### 4. 使用合适的初始容量
 ```java
@@ -726,7 +726,7 @@ Hashtable<String, String> map = new Hashtable<>();
 int expectedSize = 1000;
 int capacity = (int) (expectedSize / 0.75f) + 1;
 HashMap<String, String> map = new HashMap<>(capacity);
-```
+```java
 
 ### 5. 遍历方式选择
 ```java

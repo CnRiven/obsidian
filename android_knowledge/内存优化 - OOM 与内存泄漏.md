@@ -8,7 +8,7 @@
 
 ### 1. Android 内存区域
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │                    Android 内存布局                          │
 ├─────────────────────────────────────────────────────────────┤
@@ -98,35 +98,35 @@ public class MainActivity extends Activity {
             // 处理消息
         }
     };
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mHandler.sendMessageDelayed(Message.obtain(), 60000);
     }
 }
-```
+```java
 
 **泄漏原因：**
-```
+```java
 主线程 → Looper → MessageQueue → Message → Handler → Activity
 
 - Message 持有 Handler 引用（target 字段）
 - Handler 是非静态内部类，持有 Activity 引用
 - Message 在队列中延迟 60 秒
 - Activity 销毁后，Message 仍在队列中
-```
+```java
 
 **解决方案：**
 ```java
 // 方案一：静态内部类 + 弱引用
 private static class MyHandler extends Handler {
     private WeakReference<MainActivity> mActivity;
-    
+
     public MyHandler(MainActivity activity) {
         mActivity = new WeakReference<>(activity);
     }
-    
+
     @Override
     public void handleMessage(Message msg) {
         MainActivity activity = mActivity.get();
@@ -142,7 +142,7 @@ protected void onDestroy() {
     super.onDestroy();
     mHandler.removeCallbacksAndMessages(null);
 }
-```
+```java
 
 ### 2. 单例模式泄漏
 
@@ -151,11 +151,11 @@ protected void onDestroy() {
 public class AppManager {
     private static AppManager instance;
     private Context context;
-    
+
     private AppManager(Context context) {
         this.context = context; // 持有 Activity Context
     }
-    
+
     public static AppManager getInstance(Context context) {
         if (instance == null) {
             instance = new AppManager(context);
@@ -163,7 +163,7 @@ public class AppManager {
         return instance;
     }
 }
-```
+```java
 
 **泄漏原因：**
 - 单例持有 Activity Context
@@ -179,7 +179,7 @@ private AppManager(Context context) {
 private AppManager(Context context) {
     this.context = context.getApplicationContext();
 }
-```
+```java
 
 ### 3. 匿名内部类泄漏
 
@@ -189,7 +189,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
+
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -199,7 +199,7 @@ public class MainActivity extends Activity {
         }).start();
     }
 }
-```
+```java
 
 **泄漏原因：**
 - 匿名内部类持有 Activity 引用
@@ -210,11 +210,11 @@ public class MainActivity extends Activity {
 // 方案一：静态内部类
 private static class MyTask implements Runnable {
     private WeakReference<MainActivity> mActivity;
-    
+
     public MyTask(MainActivity activity) {
         mActivity = new WeakReference<>(activity);
     }
-    
+
     @Override
     public void run() {
         MainActivity activity = mActivity.get();
@@ -230,7 +230,7 @@ lifecycleScope.launch {
         // 耗时操作
     }
 }
-```
+```java
 
 ### 4. 注册监听未注销
 
@@ -240,15 +240,15 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
+
         SensorManager manager = (SensorManager) getSystemService(SENSOR_SERVICE);
         Sensor sensor = manager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         manager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
     }
-    
+
     // 忘记注销
 }
-```
+```java
 
 **解决方案：**
 ```java
@@ -257,7 +257,7 @@ protected void onDestroy() {
     super.onDestroy();
     sensorManager.unregisterListener(this);
 }
-```
+```java
 
 ### 5. 集合类泄漏
 
@@ -265,14 +265,14 @@ protected void onDestroy() {
 // 错误示例
 public class MainActivity extends Activity {
     private static List<Object> sList = new ArrayList<>();
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         sList.add(new Object()); // 静态集合持有对象引用
     }
 }
-```
+```java
 
 **解决方案：**
 ```java
@@ -285,7 +285,7 @@ protected void onDestroy() {
     super.onDestroy();
     sList.clear();
 }
-```
+```java
 
 ### 6. WebView 泄漏
 
@@ -293,7 +293,7 @@ protected void onDestroy() {
 // 错误示例
 public class WebViewActivity extends Activity {
     private WebView mWebView;
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -301,7 +301,7 @@ public class WebViewActivity extends Activity {
         setContentView(mWebView);
     }
 }
-```
+```java
 
 **解决方案：**
 ```java
@@ -311,14 +311,14 @@ protected void onDestroy() {
         // 清理 WebView
         mWebView.loadDataWithBaseURL(null, "", "text/html", "utf-8", null);
         mWebView.clearHistory();
-        
+
         ((ViewGroup) mWebView.getParent()).removeView(mWebView);
         mWebView.destroy();
         mWebView = null;
     }
     super.onDestroy();
 }
-```
+```java
 
 ### 7. 动画泄漏
 
@@ -328,14 +328,14 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
+
         ObjectAnimator animator = ObjectAnimator.ofFloat(view, "alpha", 0, 1);
         animator.setDuration(60000);
         animator.start();
         // 动画未取消
     }
 }
-```
+```java
 
 **解决方案：**
 ```java
@@ -344,7 +344,7 @@ private ObjectAnimator animator;
 @Override
 protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    
+
     animator = ObjectAnimator.ofFloat(view, "alpha", 0, 1);
     animator.setDuration(60000);
     animator.start();
@@ -357,7 +357,7 @@ protected void onDestroy() {
         animator.cancel();
     }
 }
-```
+```java
 
 ### 8. 资源未关闭
 
@@ -368,7 +368,7 @@ public void readFile() {
     // 读取文件
     // 忘记关闭
 }
-```
+```java
 
 **解决方案：**
 ```java
@@ -428,15 +428,15 @@ public void readFile() {
 dependencies {
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.12'
 }
-```
+```java
 
 **原理：**
-```
+```java
 1. 监控 Activity/Fragment 的销毁
 2. 使用 WeakReference + ReferenceQueue
 3. 检测到泄漏时，dump 堆内存并分析
 4. 显示泄漏链路
-```
+```java
 
 **使用：**
 - 自动检测 Activity/Fragment 泄漏
@@ -484,7 +484,7 @@ adb shell cat /proc/<pid>/status
 
 # 查看 Dalvik 堆
 adb shell dumpsys meminfo <pid> | grep -A 20 "Dalvik Heap"
-```
+```java
 
 ### 5. 代码监控
 
@@ -550,7 +550,7 @@ if (imageWidth > reqWidth || imageHeight > reqHeight) {
 options.inJustDecodeBounds = false;
 options.inSampleSize = inSampleSize;
 Bitmap bitmap = BitmapFactory.decodeFile("/sdcard/large_image.jpg", options);
-```
+```java
 
 #### 数据库查询 OOM
 ```java
@@ -572,7 +572,7 @@ Cursor cursor = db.query("table", null, null, null, null, null, null,
 <activity
     android:name=".WebViewActivity"
     android:process=":webview" />
-```
+```java
 
 ### 3. OOM 监控
 
@@ -580,26 +580,26 @@ Cursor cursor = db.query("table", null, null, null, null, null, null,
 // 监控 Java 堆内存
 public class MemoryMonitor {
     private static final double OOM_THRESHOLD = 0.8;
-    
+
     public static boolean isMemoryLow() {
         Runtime runtime = Runtime.getRuntime();
         long maxMemory = runtime.maxMemory();
         long totalMemory = runtime.totalMemory();
         long freeMemory = runtime.freeMemory();
         long usedMemory = totalMemory - freeMemory;
-        
+
         double usageRate = (double) usedMemory / maxMemory;
         return usageRate > OOM_THRESHOLD;
     }
-    
+
     public static void checkMemory() {
         if (isMemoryLow()) {
             // 触发 GC
             System.gc();
-            
+
             // 清理缓存
             clearCache();
-            
+
             // 记录日志
             Log.w("MemoryMonitor", "Memory is low");
         }
@@ -611,10 +611,10 @@ Thread.setDefaultUncaughtExceptionHandler((thread, throwable) -> {
     if (throwable instanceof OutOfMemoryError) {
         // 记录 OOM 信息
         Log.e("OOM", "Out of Memory", throwable);
-        
+
         // 清理内存
         System.gc();
-        
+
         // 重启应用
         restartApp();
     }
@@ -651,7 +651,7 @@ Glide.with(context)
     .override(200, 200) // 指定尺寸
     .format(DecodeFormat.PREFER_RGB_565) // 使用 RGB_565
     .into(imageView);
-```
+```java
 
 ### 2. 集合优化
 
@@ -669,7 +669,7 @@ LongSparseArray<Object> longSparseArray = new LongSparseArray<>(); // key 为 lo
 
 // 4. 及时清理
 map.clear();
-```
+```java
 
 ### 3. 对象复用
 
@@ -702,7 +702,7 @@ sb.append("Hello");
 sb.append(" ");
 sb.append("World");
 String result = sb.toString();
-```
+```java
 
 ### 4. 避免内存抖动
 
@@ -721,7 +721,7 @@ private Paint mPaint = new Paint(); // 构造函数中创建
 protected void onDraw(Canvas canvas) {
     canvas.drawRect(0, 0, getWidth(), getHeight(), mPaint);
 }
-```
+```java
 
 ### 5. 使用 LruCache
 
@@ -734,7 +734,7 @@ LruCache<String, Bitmap> mMemoryCache = new LruCache<String, Bitmap>(cacheSize) 
     protected int sizeOf(String key, Bitmap bitmap) {
         return bitmap.getByteCount() / 1024;
     }
-    
+
     @Override
     protected void entryRemoved(boolean evicted, String key, Bitmap oldValue, Bitmap newValue) {
         // 缓存被移除时的回调
@@ -746,7 +746,7 @@ mMemoryCache.put(key, bitmap);
 
 // 获取缓存
 Bitmap bitmap = mMemoryCache.get(key);
-```
+```java
 
 ### 6. 使用 DiskLruCache
 
@@ -807,7 +807,7 @@ phantomRef.get(); // 永远返回 null
 ```
 
 ### Q4: Bitmap 内存计算？
-```
+```text
 内存 = 宽 × 高 × 每像素字节数
 
 ARGB_8888: 4 字节/像素
@@ -826,14 +826,14 @@ ALPHA_8: 1 字节/像素
 5. 使用 inBitmap 复用
 
 ### Q6: LeakCanary 原理？
-```
+```java
 1. 监控 Activity/Fragment 的 onDestroy
 2. 使用 WeakReference 包装 Activity
 3. 等待 5 秒，检查 WeakReference 是否被回收
 4. 如果未被回收，dump 堆内存
 5. 分析 GC Root 到 Activity 的引用链
 6. 显示泄漏信息
-```
+```java
 
 ### Q7: 如何避免 OOM？
 1. 及时释放资源（Bitmap、Cursor、Stream）
@@ -850,7 +850,7 @@ ALPHA_8: 1 字节/像素
 ### 1. 使用 LeakCanary
 ```gradle
 debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.12'
-```
+```java
 
 ### 2. 避免静态持有 Activity
 ```java
@@ -863,7 +863,7 @@ private static Context context;
 public static void init(Context ctx) {
     context = ctx.getApplicationContext();
 }
-```
+```java
 
 ### 3. 及时注销监听
 ```java
@@ -874,7 +874,7 @@ protected void onDestroy() {
     locationManager.removeUpdates(this);
     EventBus.getDefault().unregister(this);
 }
-```
+```java
 
 ### 4. 使用弱引用
 ```java
@@ -890,7 +890,7 @@ public void doSomething() {
         // 使用 activity
     }
 }
-```
+```java
 
 ### 5. 图片优化
 ```java
@@ -900,7 +900,7 @@ Glide.with(context)
     .override(200, 200)
     .format(DecodeFormat.PREFER_RGB_565)
     .into(imageView);
-```
+```java
 
 ### 6. 对象复用
 ```java
@@ -908,7 +908,7 @@ Glide.with(context)
 Message msg = Message.obtain();
 // 使用 LruCache
 LruCache<String, Bitmap> cache = new LruCache<>(maxSize);
-```
+```java
 
 ### 7. 监控内存
 ```java

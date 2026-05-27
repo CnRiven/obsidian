@@ -86,7 +86,7 @@
 
 ## 📖 学习路线
 
-```
+```text
 Java基础 → Android基础 → Framework源码 → 性能优化 → 架构设计
     ↓           ↓              ↓            ↓          ↓
   集合框架    四大组件        Binder       内存优化    MVVM
