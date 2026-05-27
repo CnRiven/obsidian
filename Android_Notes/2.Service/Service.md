@@ -1,21 +1,27 @@
 ## 1.service 的生命周期，两种启动方式的区别
 
+```java
 **startService**
 
+```
 onCreate() -> onStartCommand() -> onDestroy()
 
 
 
+```java
 **bindService**
 
 onCreate() -> onbind() -> onUnbind()-> onDestroy()
+```
 
 
 区别
 
+```java
 **启动**
 
 如果服务已经开启，多次执行startService不会重复的执行onCreate()， 而是会调用onStart()和onStartCommand()。
+```
 
 如果服务已经开启，多次执行bindService时,onCreate和onBind方法并不会被多次调用
 
@@ -26,9 +32,11 @@ onCreate() -> onbind() -> onUnbind()-> onDestroy()
 
 调用者调用unbindService方法或者调用者Context不存在了（如Activity被finish了），Service就会调用onUnbind->onDestroy
 
+```java
 使用startService()方法启用服务，调用者与服务之间没有关连，即使调用者退出了，服 务仍然运行。
 
 使用bindService()方法启用服务，调用者与服务绑定在了一起，调用者一旦退出，服务也就终止。
+```
 
 
 1、单独使用startService & stopService
@@ -71,6 +79,7 @@ onCreate() -> onbind() -> onUnbind()-> onDestroy()
 
 到此，服务便正式启动完成。当创建的是本地服务或者服务所属进程已创建时，则无需经过上述步骤2、3，直接创建服务即可。
 
+```java
 **bindService**
 
 ![service2](../img/service2.png)
@@ -78,6 +87,7 @@ onCreate() -> onbind() -> onUnbind()-> onDestroy()
 **startService**
 
 ![service3](../img/service3.png)
+```
 
 
 ## 3.Service与Activity怎么实现通信
@@ -121,9 +131,11 @@ how
 why
 IntentService会创建独立的worker线程来处理所有的Intent请求  Service主线程不能处理耗时操作,IntentService不会阻塞UI线程，而普通Serveice会导致ANR异常。
 
+```java
 为Service的onBind()提供默认实现，返回null；onStartCommand提供默认实现，将请求Intent添加到队列中。
 
 所有请求处理完成后，IntentService会自动停止，无需调用stopSelf()方法停止Service。
+```
 
 
 ## 5.Service 的 onStartCommand 方法有几种返回值?各代表什么意思?

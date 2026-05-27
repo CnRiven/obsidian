@@ -75,9 +75,11 @@ Activity重新创建时，会重新构建它所管理的Fragment，原先的Frag
 3.通过add commit把真正的fragement添加到代理fragment中
 
 
+```java
 方法1：不可见的 Fragment 执行了 onResume() 方法。因为setUserVisibleHint位于onCreateView之前,此时为false，onResume之后为true，在true后加载相当于onResume()等方法在真实的createView之前调用，不可见的 Fragment 执行了 onResume() 方法。
 
 **Androidx 下的懒加载**
+```
 
 在 FragmentPagerAdapter 与 FragmentStatePagerAdapter 新增了含有 behavior 字段的构造函数
 

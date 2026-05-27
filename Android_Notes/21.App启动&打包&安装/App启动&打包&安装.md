@@ -2,16 +2,19 @@
 ## 1.应用启动流程
 
 
+```java
 **1.Launcher进程请求AMS**
 
 点击图标发生在`Launcher`应用的进程,实际上执行的是`Launcher`的`onClick`方法，在`onClick`里面会执行到`Activity`的`startActivity`方法。`startActivity`会调用`mInstrumentation.execStartActivity();` `execStartActivity`通过`ActivityManager`的`getService`方法来得到`AMS`的代理对象(`Launcher`进程作为客户端与服务端`AMS`不在同一个进程,`ActivityManager.getService`返回的是`IActivityManager.Stub`的代理对象,此时如果要实现客户端与服务端进程间的通信， 需要`AMS`继承`IActivityManager.Stub`类并实现相应的方法,这样Launcher进程作为客户端就拥有了服务端AMS的代理对象，然后就可以调用AMS的方法来实现具体功能了)
 
 **2. AMS发送创建应用进程请求，Zygote进程接受请求并fork应用进程**
+```
 
 `AMS`通过`socket`通信告知`Zygote`进程`fork`子进程。
 
 应用进程启动`ActivityThread`,执行`ActivityThread`的`main`方法。
 
+```java
 `main`方法中创建`ApplicationThread`，`Looper`，`Handler` 对象，并开启主线程消息循环`Looper.loop()`。
 
 **3.App进程通过Binder向AMS(sytem_server)发起attachApplication请求,AMS绑定ApplicationThread**
@@ -19,13 +22,16 @@
  在`ActivityThread`的`main`中,通过`ApplicationThread.attach(false, startSeq)`,将`AMS`绑定`ApplicationThread`对象,这样`AMS`就可以通过这个代理对象 来控制应用进程。
 
 **4.AMS发送启动Activity的请求**
+```
 
 `system_server`进程在收到请求后，进行一系列准备工作后，再通过`binder`向App进程发送`scheduleLaunchActivity`请求；`AMS`将启动`Activity`的请求发送给`ActivityThread`的`Handler`。
 
 
+```java
 **5.ActivityThread的Handler处理启动Activity的请求**
 
 `App`进程的`binder`线程（`ApplicationThread`）在收到请求后，通过`handler`向主线程发送`LAUNCH_ACTIVITY`消息； 主线程在收到`Message`后，通过发射机制创建目标`Activity`，并回调`Activity.onCreate()`等方法。 到此，`App`便正式启动，开始进入`Activity`生命周期，执行完`onCreate/onStart/onResume`方法，`UI`渲染结束后便可以看到`App`的主界面。
+```
 
 
   <img src="../img/yingyongqidong1.png" width = "600" height = "400" alt="图片名称" align=center />
@@ -154,15 +160,19 @@ APK是先摘要，再签名
 逐一遍历 APK 中的所有条目，如果是目录就跳过，如果是一个文件，就用 SHA1（或者 SHA256）消息摘要算法提取出该文件的摘要然后进行 BASE64 编码。
 分别用Name和SHA1-Digest记录
 
+```java
 ![app3](../img/app3.png)
 
 **CERT.SF**
+```
 
 SHA1-Digest：对 MANIFEST.MF 的各个条目做 SHA1（或者 SHA256）后再用 Base64 编码
 
+```java
 ![app4](../img/app4.png)
 
 **CERT.RSA**
+```
 
 之前生成的 CERT.SF 文件，用私钥计算出签名, 然后将签名以及包含公钥信息的数字证书一同写入 CERT.RSA 中保存
 

@@ -8,6 +8,7 @@
 
 每个像素的字节大小与Bitmap的色彩模式有关
 
+```java
 public static final Bitmap.Config ALPHA_8 　//代表8位Alpha位图 每个像素占用1byte内存
 
 public static final Bitmap.Config ARGB_4444 　//代表16位ARGB位图 每个像素占用2byte内存
@@ -15,15 +16,18 @@ public static final Bitmap.Config ARGB_4444 　//代表16位ARGB位图 每个像
 public static final Bitmap.Config ARGB_8888 　//代表32位ARGB位图 每个像素占用4byte内存
 
 public static final Bitmap.Config RGB_565 　//代表8位RGB位图 每个像素占用2byte内存
+```
 
 假设这张图片是ARGB_8888的，那这张图片占的内存就是 width * height * 4个字节或者  width * height * inTargetDensity /inDensity * 4
 
 
+```java
 **加载一张本地Res、Raw资源图片，得到的是图片的原始尺寸 * 缩放系数(inDensity)**
 
 inTargetDensity 为当前屏幕像素密度(宽平方+高平方)/尺寸。
 
 inDensity默认为图片所在文件夹对应的密度()
+```
 
 densityDpi	 160	240	 320	    480	    640
 
@@ -42,11 +46,13 @@ densityDpi	 160	240	 320	    480	    640
 
 如果被复用的Bitmap的内存比待分配内存的Bitmap大
 
+```java
 getByteCount()获取到的是当前图片应当所占内存大小
 
 getAllocationByteCount()获取到的是被复用Bitmap真实占用内存大小
 
 在复用Bitmap的情况下，getAllocationByteCount()可能会比getByteCount()大。
+```
 
 ## 3.Bitmap的压缩方式
 
@@ -123,9 +129,11 @@ LruCache的核心思想就是维护一个缓存对象列表，从表尾访问数
 
 读取缓存
 
+```java
 调用LinkedHashMap的get()方法，注意如果该元素存在，这个方法会将该元素移动到表尾.
 
 **DiskLruCache**
+```
 
 [https://juejin.cn/post/6844903556705681421#heading-6](https://juejin.cn/post/6844903556705681421#heading-6)
 

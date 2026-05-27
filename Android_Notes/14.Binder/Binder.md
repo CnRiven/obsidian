@@ -243,9 +243,7 @@ Stub.Proxy类：
 ```java
 asInterface()：客户端在ServiceConnection通过Person.Stub.asInterface(IBinder)， 
  会根据是同一进行通信，还是不同进程通信，返回Stub()实体，或者Stub.Proxy()代理对象  
-```
 
-```java
  transact()：运行在客户端，当客户端发起远程请求时，内部会把信息包
  装好，通过transact()向服务端发送。并将当前线程挂起，
   Binder驱动完成一系列的操作唤醒 Server 进程  ，调用 Server 进程本地对象的 onTransact()来调用相关函数 。

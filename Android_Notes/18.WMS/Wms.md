@@ -107,9 +107,11 @@ Toast的Window类型是TYPE_TOAST，Toast的token是由NotificationManagerServic
 
  
 
+```java
 **8.App应用程序如何与SurfaceFlinger通信的**
 
 **View 的绘制是如何把数据传递给 SurfaceFlinger 的？**
+```
 
   Android应用程序需要传递给SurfaceFlinger服务的UI元数据是相当可观的。
   在这种情况下，通过Binder来在Android应用程序与SurfaceFlinger服务之间传递UI元数据是不合适的，因此这里选择了匿名共享内存的方案。在每一个Android应用程序与SurfaceFlinger服务之间的连接上加上一块用来传递UI元数据的匿名共享内存。这块区域被包装为SharedClient。

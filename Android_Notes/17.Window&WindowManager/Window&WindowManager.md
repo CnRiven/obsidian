@@ -41,10 +41,8 @@ View就是视图,在setContentView中将R.layout.activity_main添加到DecorView
 
 ### 6.DecorView什么时候被WindowManager添加到Window中
 即使Activity的布局已经成功添加到DecorView中，DecorView此时还没有添加到Window中  
-```java
 ActivityThread的handleResumeActivity方法中，首先会调用Activity的onResume方法，接着调用Activity的makeVisible()方法  
 makeVisible()中完成了DecorView的添加和显示两个过程
-```
 
 
 
