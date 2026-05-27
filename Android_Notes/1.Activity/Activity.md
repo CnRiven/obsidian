@@ -477,7 +477,7 @@ FLAG_ACTIVITY_CLEAR_TOP
 
 ## 17.Activity的数据是怎么保存的,进程被Kill后,保存的数据怎么恢复的
 
-[wanandroid 参考链接](https://www.wanandroid.com/wenda/show/12574)
+[https://www.wanandroid.com/wenda/show/12574](https://www.wanandroid.com/wenda/show/12574)
 
 
  在Activity的onSaveInstanceState方法回调时，put到参数outState（Bundle）里面。outState就是ActivityClientRecord的state。
