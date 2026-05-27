@@ -1,4 +1,4 @@
-[https://blog.csdn.net/my_csdnboke/article/details/106685736][https://blog.csdn.net/my_csdnboke/article/details/106685736](https://blog.csdn.net/my_csdnboke/article/details/106685736)
+[https://blog.csdn.net/my_csdnboke/article/details/106685736](https://blog.csdn.net/my_csdnboke/article/details/106685736)
 
 ### 1.什么是Window
 视图承载器，是一个视图的顶层窗口， 包含了View并对View进行管理,

@@ -1,4 +1,4 @@
-[https://juejin.im/post/6844903959581163528#heading-0][https://juejin.im/post/6844903959581163528#heading-0](https://juejin.im/post/6844903959581163528#heading-0)
+[https://juejin.im/post/6844903959581163528#heading-0](https://juejin.im/post/6844903959581163528#heading-0)
 ## 1.应用启动流程
 
 
@@ -97,7 +97,7 @@ assets和res/raw
 
 ## 3.Android的签名机制，签名如何实现的,v2相比于v1签名机制的改变
 
-[https://blog.csdn.net/freekiteyu/article/details/84849651][https://blog.csdn.net/freekiteyu/article/details/84849651](https://blog.csdn.net/freekiteyu/article/details/84849651)
+[https://blog.csdn.net/freekiteyu/article/details/84849651](https://blog.csdn.net/freekiteyu/article/details/84849651)
 
 
 **签名工具**

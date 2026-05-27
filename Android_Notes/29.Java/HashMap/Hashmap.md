@@ -1,9 +1,9 @@
 
-[https://zhuanlan.zhihu.com/p/76735726][https://zhuanlan.zhihu.com/p/76735726](https://zhuanlan.zhihu.com/p/76735726)
+[https://zhuanlan.zhihu.com/p/76735726](https://zhuanlan.zhihu.com/p/76735726)
 
-[https://juejin.im/post/6844903921190699022#heading-0][https://juejin.im/post/6844903921190699022#heading-0](https://juejin.im/post/6844903921190699022#heading-0)
+[https://juejin.im/post/6844903921190699022#heading-0](https://juejin.im/post/6844903921190699022#heading-0)
 
-[https://tech.meituan.com/2016/06/24/java-hashmap.html][https://tech.meituan.com/2016/06/24/java-hashmap.html](https://tech.meituan.com/2016/06/24/java-hashmap.html)
+[https://tech.meituan.com/2016/06/24/java-hashmap.html](https://tech.meituan.com/2016/06/24/java-hashmap.html)
 
 
 ### 1. HashMap原理
@@ -11,7 +11,7 @@ jdk8后采用数组+链表+红黑树的数据结构,利用元素的key的hash值
 
 
 ### 2. HashMap中put()如何实现的
-[https://blog.csdn.net/qq_38182963/article/details/78942764][https://blog.csdn.net/qq_38182963/article/details/78942764](https://blog.csdn.net/qq_38182963/article/details/78942764)
+[https://blog.csdn.net/qq_38182963/article/details/78942764](https://blog.csdn.net/qq_38182963/article/details/78942764)
 
 1.Key.hashCode和无符号右移16位做异或运算得到hash值,取模运算计算下标index
 
@@ -56,15 +56,15 @@ t2执行完毕导致B指向A，继续执行t1，他继续先头插eA，再头插
 由于t2程导致B后面有A，所以继续头插， A插到B前面,出现环状链表。
 get一个在这个链表中不存在的key时，就会出现死循环了。
 
- [https://juejin.im/post/6844903796225605640#heading-5][https://juejin.im/post/6844903796225605640#heading-5](https://juejin.im/post/6844903796225605640#heading-5)
+ [https://juejin.im/post/6844903796225605640#heading-5](https://juejin.im/post/6844903796225605640#heading-5)
 
- [https://coolshell.cn/articles/9606.html/comment-page-3#comments][https://coolshell.cn/articles/9606.html/comment-page-3#comments](https://coolshell.cn/articles/9606.html/comment-page-3#comments)
+ [https://coolshell.cn/articles/9606.html/comment-page-3#comments](https://coolshell.cn/articles/9606.html/comment-page-3#comments)
 
- [https://www.iteye.com/blog/firezhfox-2241043][https://www.iteye.com/blog/firezhfox-2241043](https://www.iteye.com/blog/firezhfox-2241043)
+ [https://www.iteye.com/blog/firezhfox-2241043](https://www.iteye.com/blog/firezhfox-2241043)
 
 ### 5.HashMap1.7和1.8有哪些区别
 
-参考: [https://blog.csdn.net/qq_36520235/article/details/82417949][https://blog.csdn.net/qq_36520235/article/details/82417949](https://blog.csdn.net/qq_36520235/article/details/82417949)
+参考: [https://blog.csdn.net/qq_36520235/article/details/82417949](https://blog.csdn.net/qq_36520235/article/details/82417949)
 
 由数组+链表的结构改为数组+链表+红黑树。
 
@@ -113,7 +113,7 @@ get一个在这个链表中不存在的key时，就会出现死循环了。
 ### 8.不用红黑树，用二叉查找树可以不
 
 
-[https://blog.csdn.net/T_yoo_csdn/article/details/87163439][https://blog.csdn.net/T_yoo_csdn/article/details/87163439](https://blog.csdn.net/T_yoo_csdn/article/details/87163439)
+[https://blog.csdn.net/T_yoo_csdn/article/details/87163439](https://blog.csdn.net/T_yoo_csdn/article/details/87163439)
 
 但是二叉查找树在特殊情况下会变成一条线性结构
 

@@ -231,9 +231,9 @@ View与Model并不直接交互，而是通过与Presenter交互来与Model间接
 
 ## 5.MVP如何管理Presenter的生命周期，何时取消网络请求
 
-[https://blog.csdn.net/mq2553299/article/details/78927617][https://blog.csdn.net/mq2553299/article/details/78927617](https://blog.csdn.net/mq2553299/article/details/78927617)
+[https://blog.csdn.net/mq2553299/article/details/78927617](https://blog.csdn.net/mq2553299/article/details/78927617)
 
-[https://www.jianshu.com/p/0d07fba84cb8][https://www.jianshu.com/p/0d07fba84cb8](https://www.jianshu.com/p/0d07fba84cb8)
+[https://www.jianshu.com/p/0d07fba84cb8](https://www.jianshu.com/p/0d07fba84cb8)
 
  使用RxLifecycle，通过监听Activity、Fragment的生命周期，来自动断开subscription以防止内存泄漏。
 

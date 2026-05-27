@@ -1,13 +1,13 @@
 
 参考文章:  
-[http://skyacer.github.io/archives/][http://skyacer.github.io/archives/](http://skyacer.github.io/archives/)  
-[https://wizardforcel.gitbooks.io/deepin-android-vol3/content/4.html][https://wizardforcel.gitbooks.io/deepin-android-vol3/content/4.html](https://wizardforcel.gitbooks.io/deepin-android-vol3/content/4.html)  
- [http://liuwangshu.cn/system/][http://liuwangshu.cn/system/](http://liuwangshu.cn/system/)
+[http://skyacer.github.io/archives/](http://skyacer.github.io/archives/)  
+[https://wizardforcel.gitbooks.io/deepin-android-vol3/content/4.html](https://wizardforcel.gitbooks.io/deepin-android-vol3/content/4.html)  
+ [http://liuwangshu.cn/system/](http://liuwangshu.cn/system/)
 
-[https://blog.csdn.net/itachi85/article/details/78186741][https://blog.csdn.net/itachi85/article/details/78186741](https://blog.csdn.net/itachi85/article/details/78186741)
-[http://liuwangshu.cn/system/][http://liuwangshu.cn/system/](http://liuwangshu.cn/system/)
-[https://coding.imooc.com/class/chapter/340.html#Anchor][https://coding.imooc.com/class/chapter/340.html#Anchor](https://coding.imooc.com/class/chapter/340.html#Anchor)
-[https://blog.csdn.net/freekiteyu/article/details/79483406][https://blog.csdn.net/freekiteyu/article/details/79483406](https://blog.csdn.net/freekiteyu/article/details/79483406)
+[https://blog.csdn.net/itachi85/article/details/78186741](https://blog.csdn.net/itachi85/article/details/78186741)
+[http://liuwangshu.cn/system/](http://liuwangshu.cn/system/)
+[https://coding.imooc.com/class/chapter/340.html#Anchor](https://coding.imooc.com/class/chapter/340.html#Anchor)
+[https://blog.csdn.net/freekiteyu/article/details/79483406](https://blog.csdn.net/freekiteyu/article/details/79483406)
 
 
 
@@ -145,7 +145,7 @@ APP端获得填充信息，获取与SurfaceFlinger通信的能力
  
  
 **11.什么是Surface**  
-[https://blog.csdn.net/innost/article/details/47208337][https://blog.csdn.net/innost/article/details/47208337](https://blog.csdn.net/innost/article/details/47208337)  
+[https://blog.csdn.net/innost/article/details/47208337](https://blog.csdn.net/innost/article/details/47208337)  
 Surface就像是UI的画布，App在Surface上作画,WindowManager创建一个Window时，
 WindowManager会为每一个Window创建一个Surface，并把该Surface传递给app以便应用在上面绘制内容。
 SurfaceFlinger分配完之后开始在Surface上绘制图像，来往其中的BufferQueue生产视图数据，

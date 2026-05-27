@@ -15,10 +15,10 @@
 
 
 
-[https://paul.pub/android-dalvik-vm/?spm=a2c6h.12873639.0.0.35ec6884Lt7nzq][https://paul.pub/android-dalvik-vm/?spm=a2c6h.12873639.0.0.35ec6884Lt7nzq](https://paul.pub/android-dalvik-vm/?spm=a2c6h.12873639.0.0.35ec6884Lt7nzq)
+[https://paul.pub/android-dalvik-vm/?spm=a2c6h.12873639.0.0.35ec6884Lt7nzq](https://paul.pub/android-dalvik-vm/?spm=a2c6h.12873639.0.0.35ec6884Lt7nzq)
 
 
-[https://paul.pub/android-art-vm/?spm=a2c6h.12873639.0.0.35ec6884Lt7nzq][https://paul.pub/android-art-vm/?spm=a2c6h.12873639.0.0.35ec6884Lt7nzq](https://paul.pub/android-art-vm/?spm=a2c6h.12873639.0.0.35ec6884Lt7nzq)
+[https://paul.pub/android-art-vm/?spm=a2c6h.12873639.0.0.35ec6884Lt7nzq](https://paul.pub/android-art-vm/?spm=a2c6h.12873639.0.0.35ec6884Lt7nzq)
 
 
 Dalvik，ART是Android的两种运行环境，也可以叫做Android虚拟机 JIT，AOT是Android虚拟机采用的两种不同的编译策略

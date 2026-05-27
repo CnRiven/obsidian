@@ -3,7 +3,7 @@
 
 ### 1.View事件分发机制
 
-[https://www.jianshu.com/p/e99b5e8bd67b][https://www.jianshu.com/p/e99b5e8bd67b](https://www.jianshu.com/p/e99b5e8bd67b)
+[https://www.jianshu.com/p/e99b5e8bd67b](https://www.jianshu.com/p/e99b5e8bd67b)
 
 
 三个角色  
@@ -81,7 +81,7 @@ DecorView -> Activity -> PhoneWindow -> DecorView
 外部拦截法：指点击事件都先经过父容器的拦截处理，如果父容器需要此事件就拦截，否则就不拦截。具体方法：需要重写父容器的onInterceptTouchEvent方法，在内部做出相应的拦截。
 内部拦截法：指父容器不拦截任何事件，而将所有的事件都传递给子容器，如果子容器需要此事件就直接消耗，否则就交由父容器进行处理。具体方法：需要配合requestDisallowInterceptTouchEvent方法。
 
-[https://www.jianshu.com/p/982a83271327][https://www.jianshu.com/p/982a83271327](https://www.jianshu.com/p/982a83271327)
+[https://www.jianshu.com/p/982a83271327](https://www.jianshu.com/p/982a83271327)
 
 
 外部拦截法：
@@ -133,6 +133,6 @@ ACTION_MOVE > Activity.dispatchTouchEvent()
 
 事件分发列子
 
-[https://blog.csdn.net/lmj623565791/article/details/39102591][https://blog.csdn.net/lmj623565791/article/details/39102591](https://blog.csdn.net/lmj623565791/article/details/39102591)
+[https://blog.csdn.net/lmj623565791/article/details/39102591](https://blog.csdn.net/lmj623565791/article/details/39102591)
 
 

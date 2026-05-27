@@ -1,5 +1,5 @@
 
-[https://my.oschina.net/zbj1618/blog/2961367][https://my.oschina.net/zbj1618/blog/2961367](https://my.oschina.net/zbj1618/blog/2961367)
+[https://my.oschina.net/zbj1618/blog/2961367](https://my.oschina.net/zbj1618/blog/2961367)
 
 ## 1.Bitmap 内存占用的计算
 
@@ -108,7 +108,7 @@ bm = Bitmap.createBitmap(bit, 0, 0, bit.getWidth(),bit.getHeight(), matrix, true
 
 **LRU（Least Recently Used）**
 
-[https://blog.csdn.net/u010983881/article/details/79050209][https://blog.csdn.net/u010983881/article/details/79050209](https://blog.csdn.net/u010983881/article/details/79050209)
+[https://blog.csdn.net/u010983881/article/details/79050209](https://blog.csdn.net/u010983881/article/details/79050209)
 
 
 LruCache的核心思想就是维护一个缓存对象列表，从表尾访问数据，在表头删除数据。对象列表的排列方式是按照访问顺序实现，就是 当访问的数据项在链表中存在时，则将该数据项移动到表尾，否则在表尾新建一个数据项。当链表容量超过一定阈值，则移除表头的数据。
@@ -127,11 +127,11 @@ LruCache的核心思想就是维护一个缓存对象列表，从表尾访问数
 
 **DiskLruCache**
 
-[https://juejin.cn/post/6844903556705681421#heading-6][https://juejin.cn/post/6844903556705681421#heading-6](https://juejin.cn/post/6844903556705681421#heading-6)
+[https://juejin.cn/post/6844903556705681421#heading-6](https://juejin.cn/post/6844903556705681421#heading-6)
 
-[https://nich.work/2017/DiskLruCache/][https://nich.work/2017/DiskLruCache/](https://nich.work/2017/DiskLruCache/)
+[https://nich.work/2017/DiskLruCache/](https://nich.work/2017/DiskLruCache/)
 
-[https://www.jianshu.com/p/400bda3e37ed][https://www.jianshu.com/p/400bda3e37ed](https://www.jianshu.com/p/400bda3e37ed)
+[https://www.jianshu.com/p/400bda3e37ed](https://www.jianshu.com/p/400bda3e37ed)
 
 利用 LinkedHashMap实现算法LRU
 
@@ -214,7 +214,7 @@ newOutputStream
 
 ## 5.如何设计一个图片加载库
 
-[https://juejin.cn/post/6844904099297624077#heading-0][https://juejin.cn/post/6844904099297624077#heading-0](https://juejin.cn/post/6844904099297624077#heading-0)
+[https://juejin.cn/post/6844904099297624077#heading-0](https://juejin.cn/post/6844904099297624077#heading-0)
 
 
 1.对图片进行内存压缩；
@@ -246,7 +246,7 @@ newOutputStream
 
 ## 8、如果在hdpi、xxhdpi下放置了图片，加载的优先级。如果是400*800，1080*1920，加载的优先级。
 
-[https://cloud.tencent.com/developer/article/1015960][https://cloud.tencent.com/developer/article/1015960](https://cloud.tencent.com/developer/article/1015960)
+[https://cloud.tencent.com/developer/article/1015960](https://cloud.tencent.com/developer/article/1015960)
 
 
 优先会去更高密度的文件夹下找这张图片，我们当前的场景就是drawable-xxxhdpi文件夹，然后发现这里也没有android_logo这张图，接下来会尝试再找更高密度的文件夹，发现没有更高密度的了，这个时候会去drawable-nodpi文件夹找这张图，发现也没有，那么就会去更低密度的文件夹下面找，依次是drawable-xhdpi -> drawable-hdpi -> drawable-mdpi -> drawable-ldp

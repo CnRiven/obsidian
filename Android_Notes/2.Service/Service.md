@@ -51,7 +51,7 @@ onCreate() -> onbind() -> onUnbind()-> onDestroy()
 
 ## 2.Service启动流程
 
-[http://gityuan.com/2016/03/06/start-service/][http://gityuan.com/2016/03/06/start-service/](http://gityuan.com/2016/03/06/start-service/)
+[http://gityuan.com/2016/03/06/start-service/](http://gityuan.com/2016/03/06/start-service/)
 
 <img src="../img/service1.jpg" width = "600" height = "400" alt="图片名称" align=center />
 
@@ -159,7 +159,7 @@ IntentService会创建独立的worker线程来处理所有的Intent请求  Servi
 
 
 
-[https://blog.csdn.net/u014520745/article/details/49669641][https://blog.csdn.net/u014520745/article/details/49669641](https://blog.csdn.net/u014520745/article/details/49669641)
+[https://blog.csdn.net/u014520745/article/details/49669641](https://blog.csdn.net/u014520745/article/details/49669641)
 
 如果先startService，再bindService
 
