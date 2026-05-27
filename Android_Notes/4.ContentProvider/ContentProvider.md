@@ -20,11 +20,11 @@ ContentObserver：观察 ContentProvider 中的数据变化，并将变化通知
 
 ## 3.ContentProvider的实现原理
 
-[https://juejin.im/post/6844904062173839368#heading-0](https://juejin.im/post/6844904062173839368#heading-0)
+[https://juejin.im/post/6844904062173839368#heading-0][https://juejin.im/post/6844904062173839368#heading-0](https://juejin.im/post/6844904062173839368#heading-0)
 
-[http://gityuan.com/2016/07/30/content-provider/](http://gityuan.com/2016/07/30/content-provider/)
+[http://gityuan.com/2016/07/30/content-provider/][http://gityuan.com/2016/07/30/content-provider/](http://gityuan.com/2016/07/30/content-provider/)
 
-[https://blog.csdn.net/u011733869/article/details/83958712](https://blog.csdn.net/u011733869/article/details/83958712)
+[https://blog.csdn.net/u011733869/article/details/83958712][https://blog.csdn.net/u011733869/article/details/83958712](https://blog.csdn.net/u011733869/article/details/83958712)
 
 **ContentProvider的安装(ActivityThread.installProvider)**
 

@@ -1,6 +1,6 @@
 ## 1.Fragment的生命周期 & 结合Activity的生命周期
 
-[https://juejin.cn/post/6844903752114126855#heading-0](https://juejin.cn/post/6844903752114126855#heading-0)
+[https://juejin.cn/post/6844903752114126855#heading-0][https://juejin.cn/post/6844903752114126855#heading-0](https://juejin.cn/post/6844903752114126855#heading-0)
 
 ![image_2](../img/image_2.png)
 
@@ -30,7 +30,7 @@ Fragment之间
 
 ## 3.为什么使用Fragment.setArguments(Bundle)传递参数
 
-[https://www.jianshu.com/p/c06efe090589](https://www.jianshu.com/p/c06efe090589)
+[https://www.jianshu.com/p/c06efe090589][https://www.jianshu.com/p/c06efe090589](https://www.jianshu.com/p/c06efe090589)
 
 Activity.onCreate(Bundle saveInstance)->Fragment.instantitate()
 
@@ -54,9 +54,9 @@ Activity重新创建时，会重新构建它所管理的Fragment，原先的Frag
 
 判断当前 Fragment 是否对用户可见，只是 onHiddenChanged() 是在 add+show+hide 模式下使用，  setUserVisibleHint 是在 ViewPager+Fragment 模式下使用。
 
-[https://juejin.cn/post/6844904050698223624#heading-0](https://juejin.cn/post/6844904050698223624#heading-0)
+[https://juejin.cn/post/6844904050698223624#heading-0][https://juejin.cn/post/6844904050698223624#heading-0](https://juejin.cn/post/6844904050698223624#heading-0)
 
-[https://www.jianshu.com/p/bef74a4b6d5e](https://www.jianshu.com/p/bef74a4b6d5e)
+[https://www.jianshu.com/p/bef74a4b6d5e][https://www.jianshu.com/p/bef74a4b6d5e](https://www.jianshu.com/p/bef74a4b6d5e)
 
 **老的懒加载处理方案**
 
@@ -88,7 +88,7 @@ Activity重新创建时，会重新构建它所管理的Fragment，原先的Frag
 
 ## 6.ViewPager2与ViewPager区别
 
-[https://juejin.cn/post/6844904020553760782#heading-0](https://juejin.cn/post/6844904020553760782#heading-0)
+[https://juejin.cn/post/6844904020553760782#heading-0][https://juejin.cn/post/6844904020553760782#heading-0](https://juejin.cn/post/6844904020553760782#heading-0)
 
 1. FragmentStateAdapter 替代FragmentStatePagerAdapter，PagerAdapter被RecyclerView.Adapter替代
 2. 支持竖直滑动，禁止滑动

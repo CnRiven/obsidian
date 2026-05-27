@@ -1,4 +1,4 @@
-[https://blog.csdn.net/songzi1228/article/details/82772052](https://blog.csdn.net/songzi1228/article/details/82772052)
+[https://blog.csdn.net/songzi1228/article/details/82772052][https://blog.csdn.net/songzi1228/article/details/82772052](https://blog.csdn.net/songzi1228/article/details/82772052)
 
 
 ### 1.View绘制流程
@@ -133,11 +133,11 @@ public boolean post(Runnable action) {
 
 绘制原理
 
-[https://juejin.cn/post/6844904080989487118#heading-6](https://juejin.cn/post/6844904080989487118#heading-6)
+[https://juejin.cn/post/6844904080989487118#heading-6][https://juejin.cn/post/6844904080989487118#heading-6](https://juejin.cn/post/6844904080989487118#heading-6)
 
-[https://blog.csdn.net/freekiteyu/article/details/79483406](https://blog.csdn.net/freekiteyu/article/details/79483406)
+[https://blog.csdn.net/freekiteyu/article/details/79483406][https://blog.csdn.net/freekiteyu/article/details/79483406](https://blog.csdn.net/freekiteyu/article/details/79483406)
 
-[http://skyacer.github.io/2018/06/09/Android%E7%AA%97%E5%8F%A3%E7%AE%A1%E7%90%86%E5%88%86%E6%9E%90%EF%BC%88%E4%BA%8C%EF%BC%89%E2%80%94%E2%80%94%20WindowManagerService%E5%9B%BE%E5%B1%82%E7%AE%A1%E7%90%86%E4%B9%8B%E7%AA%97%E5%8F%A3%E7%9A%84%E6%B7%BB%E5%8A%A0/](http://skyacer.github.io/2018/06/09/Android%E7%AA%97%E5%8F%A3%E7%AE%A1%E7%90%86%E5%88%86%E6%9E%90%EF%BC%88%E4%BA%8C%EF%BC%89%E2%80%94%E2%80%94%20WindowManagerService%E5%9B%BE%E5%B1%82%E7%AE%A1%E7%90%86%E4%B9%8B%E7%AA%97%E5%8F%A3%E7%9A%84%E6%B7%BB%E5%8A%A0/)
+[http://skyacer.github.io/2018/06/09/Android%E7%AA%97%E5%8F%A3%E7%AE%A1%E7%90%86%E5%88%86%E6%9E%90%EF%BC%88%E4%BA%8C%EF%BC%89%E2%80%94%E2%80%94%20WindowManagerService%E5%9B%BE%E5%B1%82%E7%AE%A1%E7%90%86%E4%B9%8B%E7%AA%97%E5%8F%A3%E7%9A%84%E6%B7%BB%E5%8A%A0/][http://skyacer.github.io/2018/06/09/Android%E7%AA%97%E5%8F%A3%E7%AE%A1%E7%90%86%E5%88%86%E6%9E%90%EF%BC%88%E4%BA%8C%EF%BC%89%E2%80%94%E2%80%94%20WindowManagerService%E5%9B%BE%E5%B1%82%E7%AE%A1%E7%90%86%E4%B9%8B%E7%AA%97%E5%8F%A3%E7%9A%84%E6%B7%BB%E5%8A%A0/](http://skyacer.github.io/2018/06/09/Android%E7%AA%97%E5%8F%A3%E7%AE%A1%E7%90%86%E5%88%86%E6%9E%90%EF%BC%88%E4%BA%8C%EF%BC%89%E2%80%94%E2%80%94%20WindowManagerService%E5%9B%BE%E5%B1%82%E7%AE%A1%E7%90%86%E4%B9%8B%E7%AA%97%E5%8F%A3%E7%9A%84%E6%B7%BB%E5%8A%A0/)
 
 ------------------------------------------
  1.在 App 进程中创建PhoneWindow 后会创建ViewRoot。ViewRoot 的创建会创建一个 Surface壳子，请求WMS填充Surface，WMS  copyFrom() 一个 NativeSurface。
@@ -159,7 +159,7 @@ public boolean post(Runnable action) {
 
 ------------------------------------------
 
-刷新机制（[https://juejin.cn/post/6863756420380196877#heading-11）](https://juejin.cn/post/6863756420380196877#heading-11）)
+刷新机制（[https://juejin.cn/post/6863756420380196877#heading-11）][https://juejin.cn/post/6863756420380196877#heading-11）](https://juejin.cn/post/6863756420380196877#heading-11）)
 
 双缓存
 
@@ -262,7 +262,7 @@ SurfaceView虽然具有独立的绘图表面，不过它仍然是宿主窗口的
 
 
 ### 15.SurfaceView、TextureView、SurfaceTexture、GLSurfaceView
-[https://zhooker.github.io/2018/03/24/SurfaceTexture%E7%9A%84%E5%8C%BA%E5%88%AB/](https://zhooker.github.io/2018/03/24/SurfaceTexture%E7%9A%84%E5%8C%BA%E5%88%AB/)  
+[https://zhooker.github.io/2018/03/24/SurfaceTexture%E7%9A%84%E5%8C%BA%E5%88%AB/][https://zhooker.github.io/2018/03/24/SurfaceTexture%E7%9A%84%E5%8C%BA%E5%88%AB/](https://zhooker.github.io/2018/03/24/SurfaceTexture%E7%9A%84%E5%8C%BA%E5%88%AB/)  
 SurfaceView：使用双缓冲机制，有自己的 surface，在一个独立的线程里绘制，Android7.0之前不能平移、缩放
 TextureView：它不会在WMS中单独创建窗口，而是作为一个普通View，可以和其它普通View一样进行移动，旋转，缩放，动画等变化。值得注意的是TextureView必须在硬件加速的窗口中。  
 SurfaceTexture：SurfaceTexture和SurfaceView不同的是，它对图像流的处理并不直接显示，而是转为OpenGL外部纹理，因此可用于图像流数据的二次处理（如Camera滤镜，桌面特效等）。

@@ -1,8 +1,8 @@
-[https://blog.csdn.net/u010289802?t=1](https://blog.csdn.net/u010289802?t=1)
+[https://blog.csdn.net/u010289802?t=1][https://blog.csdn.net/u010289802?t=1](https://blog.csdn.net/u010289802?t=1)
 
-[https://blog.csdn.net/u010289802/article/details/80183142](https://blog.csdn.net/u010289802/article/details/80183142)
+[https://blog.csdn.net/u010289802/article/details/80183142][https://blog.csdn.net/u010289802/article/details/80183142](https://blog.csdn.net/u010289802/article/details/80183142)
 
-[https://juejin.cn/user/4318537403878167/posts](https://juejin.cn/user/4318537403878167/posts)
+[https://juejin.cn/user/4318537403878167/posts][https://juejin.cn/user/4318537403878167/posts](https://juejin.cn/user/4318537403878167/posts)
 
 ## 1.AOP是什么
 
@@ -36,11 +36,11 @@ OOP更多关注的是对象Object本身的功能，对象之间的功能的联�
 
 ## 3.AOP的实现方式
 
-[https://juejin.cn/post/6844903741808705544#heading-0](https://juejin.cn/post/6844903741808705544#heading-0)
+[https://juejin.cn/post/6844903741808705544#heading-0][https://juejin.cn/post/6844903741808705544#heading-0](https://juejin.cn/post/6844903741808705544#heading-0)
 
  ![aop1](../img/aop1.png)
 
-[https://juejin.cn/post/6844903728525361165#heading-30](https://juejin.cn/post/6844903728525361165#heading-30)
+[https://juejin.cn/post/6844903728525361165#heading-30][https://juejin.cn/post/6844903728525361165#heading-30](https://juejin.cn/post/6844903728525361165#heading-30)
 
 
 Android中AOP的实现方式分两类：
@@ -126,7 +126,7 @@ ART中的函数的调用约定,去修改函数的内容，将函数的前两条�
 
 5.hook
 
-[https://zhuanlan.zhihu.com/p/109157321](https://zhuanlan.zhihu.com/p/109157321)
+[https://zhuanlan.zhihu.com/p/109157321][https://zhuanlan.zhihu.com/p/109157321](https://zhuanlan.zhihu.com/p/109157321)
 
 
 反射/动态代理

@@ -1,7 +1,7 @@
-[https://juejin.im/post/6844903589635162126#heading-1](https://juejin.im/post/6844903589635162126#heading-1)  
-[https://blog.csdn.net/carson_ho/article/details/73560642](https://blog.csdn.net/carson_ho/article/details/73560642)  
-[https://www.colabug.com/2019/0421/6041679/](https://www.colabug.com/2019/0421/6041679/)  
-[https://juejin.im/post/6844903469971685390#heading-0](https://juejin.im/post/6844903469971685390#heading-0)
+[https://juejin.im/post/6844903589635162126#heading-1][https://juejin.im/post/6844903589635162126#heading-1](https://juejin.im/post/6844903589635162126#heading-1)  
+[https://blog.csdn.net/carson_ho/article/details/73560642][https://blog.csdn.net/carson_ho/article/details/73560642](https://blog.csdn.net/carson_ho/article/details/73560642)  
+[https://www.colabug.com/2019/0421/6041679/][https://www.colabug.com/2019/0421/6041679/](https://www.colabug.com/2019/0421/6041679/)  
+[https://juejin.im/post/6844903469971685390#heading-0][https://juejin.im/post/6844903469971685390#heading-0](https://juejin.im/post/6844903469971685390#heading-0)
 
 
 ### 1.Android中进程和线程的关系,区别
@@ -261,7 +261,7 @@ onTransact()根据 Client传来的 code 调用相关函数  。调用完成后�
 即将每个业务模块的Binder请求统一转发到一个远程Service中去执行，
 从而避免重复创建Service。
 
-[https://blog.csdn.net/it_yangkun/article/details/79888900](https://blog.csdn.net/it_yangkun/article/details/79888900)
+[https://blog.csdn.net/it_yangkun/article/details/79888900][https://blog.csdn.net/it_yangkun/article/details/79888900](https://blog.csdn.net/it_yangkun/article/details/79888900)
 
 
 
