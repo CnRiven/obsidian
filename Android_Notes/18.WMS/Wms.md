@@ -30,10 +30,8 @@
 (3).管理窗口动画  
    窗口间进行切换时，使用窗口动画可以显得更炫一些，窗口动画由WMS的动画子系统WindowAnimator来负责。
 
-```java
 (4).输入系统中转站  
 通过对窗口的触摸从而产生触摸事件，InputManagerService(IMS) 会对触摸事件进行处理，它会寻找一个最合适的窗口来处理触摸反馈信息，WMS 是窗口的管理者，它作为输入系统的中转站再合适不过了。
-```
 <img src="../img/clipboard.png" width = "600" height = "300" alt="图片名称" align=center />
  
 
@@ -107,11 +105,9 @@ Toast的Window类型是TYPE_TOAST，Toast的token是由NotificationManagerServic
 
  
 
-```java
 **8.App应用程序如何与SurfaceFlinger通信的**
 
 **View 的绘制是如何把数据传递给 SurfaceFlinger 的？**
-```
 
   Android应用程序需要传递给SurfaceFlinger服务的UI元数据是相当可观的。
   在这种情况下，通过Binder来在Android应用程序与SurfaceFlinger服务之间传递UI元数据是不合适的，因此这里选择了匿名共享内存的方案。在每一个Android应用程序与SurfaceFlinger服务之间的连接上加上一块用来传递UI元数据的匿名共享内存。这块区域被包装为SharedClient。

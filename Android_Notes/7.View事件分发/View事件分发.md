@@ -8,10 +8,8 @@
 
 三个角色  
 1、Activity：只有分发dispatchTouchEvent和消费onTouchEvent两个方法。  事件由ViewRootImpl中DecorView
-```java
 dispatchTouchEvent分发Touch事件->Activity的dispatchTouchEvent()-
 DecorView。superDispatchTouchEvent-> ViewGroup的dispatchTouchEvent()。
-```
 如果返回false直接掉用onTouchEvent，true表示被消费
 
 2、ViewGroup：拥有分发、拦截和消费三个方法。：对应一个根ViewGroup来说，点击事件产生后，首先会传递给它，dispatchTouchEvent就会被调用，如果这个ViewGroup的onInterceptTouchEvent方法返回true就表示它要拦截当前事件， 事件就会交给这个ViewGroup的onTouchEvent处理。如果这个ViewGroup的onInterceptTouchEvent方法返回false就表示它不拦截当前事件，这时当前事件就会继续传递给它的子元素，接着子元素的dispatchTouchEvent方法就会被调用。
@@ -20,12 +18,10 @@ DecorView。superDispatchTouchEvent-> ViewGroup的dispatchTouchEvent()。
 
 三个核心事件
 
-```java
 1、dispatchTouchEvent()：方法返回值为true表示事件被当前视图消费掉； 返回为false表示 停止往子View传递和分发,交给父类的onTouchEvent处理
 
 2、onInterceptTouchEvent() ： return false 表示不拦截，需要继续传递给子视图。return true 拦截这个事件并交由自身的onTouchEvent方法进行消费.
 
-```
 3、 onTouchEvent() ： return false 是不消费事件，会被传递给父视图的onTouchEvent方法进行处理。return true 是消费事件。
 
 
@@ -106,25 +102,21 @@ DecorView -> Activity -> PhoneWindow -> DecorView
 
 一个事件序列只能被一个View拦截且消耗。因为一旦一个元素拦截了此事件，那么同一个事件序列内的所有事件都会直接交给它处理（即不会再调用这个View的拦截方法去询问它是否要拦截了，而是把剩余的ACTION_MOVE、ACTION_DOWN等事件直接交给它来处理）。
 
-```java
 Activity.dispatchTouchEvent() -> ViewGroup1.dispatchTouchEvent() -> ViewGroup1.onInterceptTouchEvent() -> view1.dispatchTouchEvent() -> view1.onTouchEvent() -> ViewGroup1.onTouchEvent()
 
 
 -> Activity.dispatchTouchEvent()
 -> ViewGroup1.dispatchTouchEvent()
-```
 -> ViewGroup1.onTouchEvent()
 
 
 
 ### 9.Activity ViewGroup和View都不消费ACTION_DOWN,那么ACTION_UP事件是怎么传递的
 
-```java
 ACTION_DOWN:-> Activity.dispatchTouchEvent() -> ViewGroup1.dispatchTouchEvent() -> ViewGroup1.onInterceptTouchEvent() -> view1.dispatchTouchEvent() -> view1.onTouchEvent() -> ViewGroup1.onTouchEvent() -> Activity.onTouchEvent();
 
 ACTION_MOVE > Activity.dispatchTouchEvent()
 -> Activity.onTouchEvent();
-```
 -> 消费
 
 

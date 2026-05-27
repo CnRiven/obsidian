@@ -104,10 +104,8 @@ Client、Server、ServiceManager均在用户空间中实现，而Binder驱动程
 
 内存映射将用户空间的一块内存区域映射到内核空间。映射关系建立后，内核空间对这段区域的修改也能直接反应到用户空间,少了一次拷贝。
 
-```java
   Binder 驱动使用 mmap()  在内核空间创建数据接收的缓存空间。
   mmap(NULL, MAP_SIZE, PROT_READ, MAP_PRIVATE, fd, 0)的返回值是内核空间映射在用户空间的地址
-```
 
 
 1.Binder 驱动在内核空间创建一个数据接收缓存区。
@@ -240,20 +238,16 @@ Stub.Proxy类：
 服务的代理，客户端asInterface获取到Stub.Proxy。  
 它实现了IInterface接口，说明它是Binder通信过程的一部分；它实现了aidl中声明的方法，但最终还是交由其中的mRemote成员来处理，说明它是一个代理对象，mRemote成员实际上就是BinderProxy。
 
-```java
 asInterface()：客户端在ServiceConnection通过Person.Stub.asInterface(IBinder)， 
  会根据是同一进行通信，还是不同进程通信，返回Stub()实体，或者Stub.Proxy()代理对象  
 
  transact()：运行在客户端，当客户端发起远程请求时，内部会把信息包
  装好，通过transact()向服务端发送。并将当前线程挂起，
   Binder驱动完成一系列的操作唤醒 Server 进程  ，调用 Server 进程本地对象的 onTransact()来调用相关函数 。
-```
   到远程请求返回，当前线程继续执行。
 
-```java
 onTransact()：运行在服务端的Binder线程池中，当客户端发起跨进程请求时，
 onTransact()根据 Client传来的 code 调用相关函数  。调用完成后把数据写入Parcel，通过reply发送给Client。 
-```
 驱动唤醒 Client 进程里刚刚挂起的线程并将结果返回。   
 
    <img src="../img/binder1.png" width = "450" height = "200" alt="图片名称" align=center />
