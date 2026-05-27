@@ -1,4 +1,19 @@
 [
   "obsidian-git",
-  "obsidian-custom-attachment-location"
+  "obsidian-custom-attachment-location",
+  "templater-obsidian",
+  "dataview",
+  "calendar",
+  "quickadd",
+  "periodic-notes",
+  "obsidian-commander",
+  "obsidian-style-settings",
+  "obsidian-hider",
+  "minimal-settings",
+  "advanced-tables",
+  "obsidian-linter",
+  "obsidian-tag-wrangler",
+  "homepage",
+  "obsidian-excalidraw-plugin",
+  "obsidian-kanban"
 ]

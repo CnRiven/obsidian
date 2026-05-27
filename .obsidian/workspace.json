@@ -1,24 +1,20 @@
 {
   "main": {
-    "id": "9c785d4e8e5474dd",
+    "id": "5324373015726ba8",
     "type": "split",
     "children": [
       {
-        "id": "c4f097c7edc0b5d8",
+        "id": "4509724f8bf84da7",
         "type": "tabs",
         "children": [
           {
-            "id": "7043acc31e9df9b1",
+            "id": "e7a7b303c61786dc",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Android_Notes/1.Activity/Activity.md",
-                "mode": "source",
-                "source": false
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "Activity"
+              "title": "新标签页"
             }
           }
         ]
@@ -182,6 +178,11 @@
   },
   "left-ribbon": {
     "hiddenItems": {
+      "templater-obsidian:Templater": false,
+      "periodic-notes:Open today's daily note": false,
+      "homepage:Open homepage": false,
+      "obsidian-excalidraw-plugin:新建绘图文件": false,
+      "obsidian-kanban:创建新看板": false,
       "switcher:打开快速切换": false,
       "graph:查看关系图谱": false,
       "canvas:新建白板": false,
@@ -192,8 +193,9 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "7043acc31e9df9b1",
+  "active": "e7a7b303c61786dc",
   "lastOpenFiles": [
+    "Android_Notes/1.Activity/Activity.md",
     "Android_Notes/2.Service/Service.md",
     "Android_Notes/29.Java/注解/注解.md",
     "Android_Notes/29.Java/img/jvm7.jpg",
@@ -217,7 +219,6 @@
     "Android_Notes/img/yingyongqidong1.png",
     "Android_Notes/img/xnyh1.png",
     "Android_Notes/img/xitongqidong1.png",
-    "Android_Notes/1.Activity/Activity.md",
     "Agentara Underground 分享/Harness 101/Harness 101 - 从 for 循环到自治系统的进化之路.md",
     "Android_Notes/img",
     "Android_Notes/10.WebView/WebView.md",
